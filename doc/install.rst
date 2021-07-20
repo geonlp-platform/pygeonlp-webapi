@@ -32,11 +32,6 @@ pygeonlp-webapi にはデータベースを作成する機能は
 ありませんので、 pygeonlp でデータベースを作成してください。
 データベースの作成方法は `インストール後の設定作業 <https://geonlp.ex.nii.ac.jp/doc/pygeonlp/install.html#setup-pygeonlp>`_ を参照してください。
 
-デフォルト以外のディレクトリにデータベースを作成した場合は
-環境変数 ``GEONLP_DB_DIR`` にデータベースを作成した
-ディレクトリのパスをセットしてください。 ::
-
-  $ export GEONLP_DB_DIR=/usr/local/share/geonlp/db/
 
 サーバの起動
 ------------
@@ -59,6 +54,25 @@ pygeonlp-webapi にはデータベースを作成する機能は
 ``--bind`` はこのサーバにアクセスできるホストとポートを指定します。
 どこからでもアクセスできるサービスをポート 8000 で公開したい場合は
 ``--bind=0.0.0.0:8000`` のように指定してください。
+
+**データベースのパスを指定する場合**
+
+デフォルト以外のディレクトリにデータベースを作成した場合は
+サーバを起動する前に環境変数 ``GEONLP_DB_DIR`` に
+データベースを作成したディレクトリのパスをセットしてください。 ::
+
+  $ export GEONLP_DB_DIR=/usr/local/share/geonlp/db/
+
+**NEologを利用する場合**
+
+MeCab システム辞書として
+`NEolog <https://github.com/neologd/mecab-ipadic-neologd/>`_
+などデフォルトの IPADIC 以外の辞書を利用する場合、
+サーバを起動する前に環境変数 ``MECAB_DIC_DIR`` に
+辞書ディレクトリのパスをセットしてください。 ::
+
+  $ export MECAB_DIC_DIR=$HOME/mecab-ipadic-neologd/
+
 
 ブラウザ上でのテスト
 --------------------

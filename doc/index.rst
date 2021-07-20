@@ -5,11 +5,11 @@
 
 JavaScript などで構築されたウェブアプリケーションや、
 Python 以外の言語で開発したアプリケーションから、
-地名語辞書を検索したりテキストのジオパージング処理を
-行ないたい場合、 pygeonlp の解析・検索機能を
-を利用した
-ウェブサービスとして提供する拡張モジュール
-`pygeonlp-webapi <https://github.com/geonlp-platform/pygeonlp-webapi>`_ を利用できます。
+地名語辞書を検索したりテキストのジオパージング処理を行ないたい場合、
+pygeonlp の解析・検索機能を利用したウェブサービスとして
+提供する拡張モジュール
+`pygeonlp-webapi <https://github.com/geonlp-platform/pygeonlp-webapi>`_
+を利用できます。
 
 .. toctree::
    :maxdepth: 2

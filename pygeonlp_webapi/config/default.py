@@ -10,7 +10,11 @@ class BaseConfig(object):
 
     GEONLP_DIR = geonlp_api.get_db_dir()
     JAGEOCODER_DIR = geonlp_api.get_jageocoder_db_dir()
+    MECAB_DIC_DIR = os.environ.get('MECAB_DIC_DIR')
     GEONLP_API_OPTIONS = {}
+
+    if MECAB_DIC_DIR is not None:
+        GEONLP_API_OPTIONS['system_dic_dir'] = MECAB_DIC_DIR
 
     LOGGING = {
         'version': 1,
