@@ -1,9 +1,9 @@
 from collections.abc import Iterable
 import datetime
-from typing import Any, Dict, List, Union, NoReturn, Optional
 from logging.config import dictConfig
 from numbers import Real
 import os
+from typing import Any, Dict, List, Union, NoReturn, Optional
 
 from flask import Flask
 from flask_jsonrpc import JSONRPC
@@ -16,7 +16,7 @@ from pygeonlp_webapi.config.default import config
 dictConfig(config.LOGGING)
 app = Flask('pygeonlp_webapi')
 app.config.from_object(config)
-jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=False)
+jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
 try:
     import jageocoder
@@ -154,6 +154,20 @@ def apply_geonlp_api_parse_options(options: Optional[dict] = None):
                 "'set-class' には解析対象とする固有名クラスを"
                 "正規表現のリストで指定してください。"))
 
+    if 'remove-class' in options:
+        param = options.get('remove-class')
+        if isinstance(param, Iterable):
+            for x in list(param):
+                if str(x)[0] == '-':
+                    active_classes.append(str(x)[1:])
+                else:
+                    active_classes.append('-' + str(x))
+
+        else:
+            raise TypeError((
+                "'remove-class' には解析対象から除外する固有名クラスを"
+                "正規表現のリストで指定してください。"))
+
     if 'add-class' in options:
         param = options.get('add-class')
         if isinstance(param, Iterable):
@@ -163,25 +177,7 @@ def apply_geonlp_api_parse_options(options: Optional[dict] = None):
                 "'add-class' には解析対象に追加する固有名クラスを"
                 "正規表現のリストで指定してください。"))
 
-    if 'remove-class' in options:
-        param = options.get('remove-class')
-        if isinstance(param, Iterable):
-            active_classes += ['-' + str(x) for x in list(param)]
-        else:
-            raise TypeError((
-                "'remove-class' には解析対象から除外する固有名クラスを"
-                "正規表現のリストで指定してください。"))
-
-    # 利用するクラス、除外するクラスの順に並べ替え
-    include_classes = []
-    exclude_classes = []
-    for classname in active_classes:
-        if classname.startswith('-'):
-            exclude_classes.append(classname)
-        else:
-            include_classes.append(classname)
-
-    geonlp_api.setActiveClasses(include_classes + exclude_classes)
+    geonlp_api.setActiveClasses(active_classes)
 
 
 def get_filters_from_options(options: Optional[dict] = {}):
@@ -285,6 +281,23 @@ def get_filters_from_options(options: Optional[dict] = {}):
 
 @jsonrpc.method('geonlp.parse')
 def parse(sentence: str, options: Optional[dict] = {}) -> dict:
+    """
+    テキストを geoparse します。
+
+    Parameters
+    ----------
+    sentence: str
+        変換したいテキスト
+    options: dict, optional
+        Parse オプション
+
+    Returns
+    -------
+    dict
+        ``features`` に GeoJSON Feature 形式の
+        地名語、非地名語、住所をリストとして含む
+        dict を返します。
+    """
     apply_geonlp_api_parse_options(options)
     filters = get_filters_from_options(options)
     if options.get('geocoding'):
@@ -307,7 +320,34 @@ def parse(sentence: str, options: Optional[dict] = {}) -> dict:
 def parse_structured(
         sentence_list: List[str],
         options: Optional[dict] = {}) -> dict:
+    """
+    複数のセンテンスを geoparse します。
 
+    リストのそれぞれのテキストを geoparse してから
+    結果を結合します。
+    先にテキストを結合して ``parse()`` を呼ぶと、
+    テキストが長すぎる場合に自動的に分割するため、
+    地名解決の精度が低下する原因になります。
+
+    テキストの意味的な区切り（文、段落など）が
+    分かっている場合は、1ブロックずつ ``parse()`` 
+    で処理するか、 ``parseStructured()`` を
+    使ってください。
+
+    Parameters
+    ----------
+    sentence_list: list of str
+        変換したいテキストのリスト
+    options: dict, optional
+        Parse オプション
+
+    Returns
+    -------
+    dict
+        ``features`` に GeoJSON Feature 形式の
+        地名語、非地名語、住所をリストとして含む
+        dict を返します。
+    """
     apply_geonlp_api_parse_options(options)
     filters = get_filters_from_options(options)
     if options.get('geocoding'):
@@ -331,13 +371,12 @@ def parse_structured(
 @jsonrpc.method('geonlp.search')
 def search(key: str, options: Optional[dict] = None) -> dict:
     """
-    Method ``geonlp.search``
     任意の地名語の情報をデータベースから検索します。
 
     Parameters
     ----------
     key: str
-        検索する語
+        検索する語の表記または読み
     options: dict
         Parse オプション
 
@@ -353,14 +392,13 @@ def search(key: str, options: Optional[dict] = None) -> dict:
 @jsonrpc.method('geonlp.getGeoInfo')
 def get_geo_info(idlist: List[str], options: Optional[dict] = None) -> dict:
     """
-    Method ``geonlp.getGeoInfo``
     指定した geolod_id を持つ語の情報を返します。
-    id が辞書に存在しない場合は None を返します。
+    id がデータベースに存在しない場合は None を返します。
 
     Parameters
     ----------
     idlist: str or list
-        検索する語の geolod_id または geolod_id のリスト
+        検索する語の geolod_id のリスト
     options: dict
         Parse オプション
 
@@ -376,7 +414,6 @@ def get_geo_info(idlist: List[str], options: Optional[dict] = None) -> dict:
 @jsonrpc.method('geonlp.getDictionaries')
 def get_dictionaries(options: Optional[dict] = None) -> list:
     """
-    Method ``geonlp.getDictionaries``
     データベースに登録されている地名解析辞書の
     identifier のリストを返します。
 
@@ -388,7 +425,7 @@ def get_dictionaries(options: Optional[dict] = None) -> list:
     Returns
     -------
     list
-        identifier のリスト
+        辞書 identifier のリスト
     """
     apply_geonlp_api_parse_options(options)
     return sorted(
@@ -401,7 +438,6 @@ def get_dictionary_info(
         identifier: str,
         options: Optional[dict] = None) -> Union[str, None]:
     """
-    Method ``geonlp.getDictionaryInfo``
     指定された identifer を持つ地名解析辞書の JSONLD
     メタデータをデータベースから取得します。
 
@@ -430,8 +466,7 @@ def get_dictionary_info(
 @jsonrpc.method('geonlp.addressGeocoding')
 def address_geocoding(address: str) -> dict:
     """
-    Method ``geonlp.addressGeocoding``
-    住所ジオコーディングした結果を返します。
+    住所ジオコーディング処理を行ないます。
 
     Parameters
     ----------

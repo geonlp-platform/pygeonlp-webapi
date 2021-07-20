@@ -1,115 +1,17 @@
-import glob
-import json
-import os
-import urllib.parse
-import sys
-
 import pytest
 
-import pygeonlp.api as geonlp_api
-from pygeonlp_webapi.app import app
-from pygeonlp_webapi.config.default import config
+from tests.helpers import validate_jsonrpc, write_resreq
 
 """
-Unit tests for pygeonlp_webapi.
-
-run `pytest` to do all tests.
-run `pytest -k <funcname>` to do the matched tests.
+GDAL がインストールされているかどうかをチェックします
 """
-
+"""
 gdal_not_installed = False
 try:
     import gdal
 except ModuleNotFoundErrlr:
     gdal_not_installed = True
-
-
-@pytest.fixture(scope="session", autouse=True)
-def createTempDatabase(tmp_path_factory):
-    """
-    Create temporary geonlp database for the tests.
-    """
-    if False:
-        # Setup test database in a temporary directory
-        db_dir = str(tmp_path_factory.mktemp('db'))
-        geonlp_api.setup_basic_database(db_dir=db_dir)
-        geonlp_api.init(db_dir=db_dir,
-                        **(config.GEONLP_API_OPTIONS))
-    else:
-        # or, use default database under GEONLP_DB_DIR
-        pass
-
-
-@pytest.fixture(scope="function", autouse=True)
-def setup():
-    app.config['TESTING'] = True
-
-
-@pytest.fixture
-def client():
-    with app.test_client() as client:
-        with app.app_context():
-            yield client
-
-
 """
-Tools
-"""
-
-
-def print_response(rv):
-    print("code:{}, data:'{}'".format(rv.status_code, rv.data),
-          file=sys.stderr)
-
-
-def validate_jsonrpc(client, query, expected):
-    """
-    Send query and compare the result with expected.
-
-    Parameters
-    ----------
-    client: client fixture
-    query: str
-        The query string to POST to the server
-    expected: any
-        The value expected as a result.
-        The JSON decoded value stored in the 'result'
-        field of the response is used.
-
-        When '*' is passed as 'expected', any response will pass.
-
-    Return
-    ------
-    any
-        The JSON decoded value stored in the 'result'
-        field of the response.
-    """
-    headers = {"Content-Type": "application/json"}
-    rv = client.post('/api', data=query, headers=headers)
-    assert rv.status_code == 200
-    response_json = json.loads(rv.data)
-    result = response_json['result']
-    if expected != '*':
-        assert result == expected
-
-    return result
-
-
-def validate_jsonrpc_error(client, query, expected_code):
-    """
-    Send query and compare the status code with expected_code.
-
-    Parameters
-    ----------
-    client: client fixture
-    query: str
-        The query string to POST to the server
-    expected_code: int
-        The expected status_code.
-    """
-    headers = {"Content-Type": "application/json"}
-    rv = client.post('/api', data=query, headers=headers)
-    assert rv.status_code == expected_code
 
 
 class TestBasicApi:
@@ -121,11 +23,11 @@ class TestBasicApi:
         """
         Test ``geonlp.parse`` API.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {'sentence': 'NIIは神保町駅から徒歩7分です。'},
             'id': 'test_parse',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -145,18 +47,20 @@ class TestBasicApi:
             else:
                 assert prop['node_type'] == 'NORMAL'
 
+        write_resreq(query, result)
+
     def test_parse_geocoding(self, client):
         """
         Test ``geonlp.parse`` API using geocoding.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': 'NIIは千代田区一ツ橋2-1-2にあります。',
                 'options': {'geocoding': 'true'}
             },
             'id': 'test_parse_geocoding',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -176,11 +80,13 @@ class TestBasicApi:
             else:
                 assert prop['node_type'] == 'NORMAL'
 
+        write_resreq(query, result)
+
     def test_parseStructured(self, client):
         """
         Test ``geonlp.parseStructured`` API.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parseStructured',
             'params': {
                 'sentence_list': [
@@ -189,7 +95,7 @@ class TestBasicApi:
                     '竹橋駅も近いです。', ]
             },
             'id': 'test_parseStructured',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -211,15 +117,17 @@ class TestBasicApi:
             else:
                 assert prop['node_type'] == 'NORMAL'
 
+        write_resreq(query, result)
+
     def test_search(self, client):
         """
         Test ``geonlp.search`` API.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.search',
             'params': {'key': '国会議事堂前'},
             'id': 'test_search',
-        })
+        }
         expected = {
             'QUy2yP': {
                 'body': '国会議事堂前', 'dictionary_id': 3,
@@ -248,40 +156,18 @@ class TestBasicApi:
                 'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
             }
         }
-        validate_jsonrpc(client, query, expected)
-
-    def test_getGeoInfo_id(self, client):
-        """
-        Test ``geonlp.getGeoInfo`` API with single geolod_id.
-        """
-        query = json.dumps({
-            'method': 'geonlp.getGeoInfo',
-            'params': {'idlist': ['fuquyv']},
-            'id': 'test_getGeoInfo_id',
-        })
-        expected = {'fuquyv': {
-            'body': '国会議事堂前', 'dictionary_id': 3,
-            'entry_id': 'e630bf128884455c4994e0ac5ca49b8d',
-            'geolod_id': 'fuquyv',
-            'hypernym': [
-                '東京地下鉄', '4号線丸ノ内線'
-            ], 'institution_type': '民営鉄道',
-            'latitude': '35.674845', 'longitude': '139.74534166666666',
-            'ne_class': '鉄道施設/鉄道駅', 'railway_class': '普通鉄道',
-            'suffix': ['駅', ''],
-            'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
-        }}
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
     def test_getGeoInfo_idlist(self, client):
         """
         Test ``geonlp.getGeoInfo`` API with multiple geolod_id.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.getGeoInfo',
             'params': {'idlist': ['fuquyv', 'QUy2yP']},
             'id': 'test_getGeoInfo_idlist',
-        })
+        }
         expected = {
             'QUy2yP': {
                 'body': '国会議事堂前', 'dictionary_id': 3,
@@ -310,67 +196,72 @@ class TestBasicApi:
                 'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
             }
         }
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
     def test_getGeoInfo_nocandidate(self, client):
         """
         Test ``geonlp.getGeoInfo`` API with invalid geolod_id.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.getGeoInfo',
             'params': {'idlist': ['aaaaaa']},
             'id': 'test_getGeoInfo_nocandidate',
-        })
+        }
         expected = {'aaaaaa': None}
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
     def test_getDictionaries(self, client):
         """
         Test ``geonlp.getDictionaries`` API.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.getDictionaries',
             'params': {},
             'id': 'test_getDictionaries',
-        })
+        }
         expected = ['geonlp:geoshape-city',
                     'geonlp:geoshape-pref',
                     'geonlp:ksj-station-N02-2019']
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
     def test_getDictionaryInfo(self, client):
         """
         Test ``geonlp.getDictionaryInfo`` API.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.getDictionaryInfo',
             'params': {'identifier': 'geonlp:ksj-station-N02-2019'},
             'id': 'test_getDictionaryInfo',
-        })
+        }
         expected = '{"@context": "https://schema.org/", "@type": "Dataset", "alternateName": "", "creator": [{"@type": "Organization", "name": "株式会社情報試作室", "sameAs": "https://www.info-proto.com/"}], "dateModified": "2019-12-31T00:00:00+09:00", "description": "国土数値情報「鉄道データ（令和元年度）N02-19」（https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v2_3.html）から作成した、日本の鉄道駅（地下鉄を含む）の辞書です。hypernymには運営者名と路線名を記載しています。「都営」ではなく「東京都」のようになっていますので注意してください。自由フィールドとして、railway_typeに「鉄道区分」、institution_typeに「事業者種別」を含みます。", "distribution": [{"@type": "DataDownload", "contentUrl": "https://www.info-proto.com/static/ksj-station-N02-2019.csv", "encodingFormat": "text/csv"}], "identifier": ["geonlp:ksj-station-N02-2019"], "isBasedOn": {"@type": "CreativeWork", "name": "鉄道データ（令和元年度）N02-19", "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v2_3.html"}, "keywords": ["GeoNLP", "地名辞書", "鉄道", "駅"], "license": "https://nlftp.mlit.go.jp/ksj/other/agreement.html", "name": "日本の鉄道駅（2019年）", "size": "10311", "spatialCoverage": {"@type": "Place", "geo": {"@type": "GeoShape", "box": "26.193265 127.652285 45.4161633333333 145.59723"}}, "temporalCoverage": "../..", "url": "https://www.info-proto.com/static/ksj-station-N02-2019.html"}'
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
     def test_getDictionaryInfo_nocandidate(self, client):
         """
         Test ``geonlp.getDictionaryInfo`` API with invalid identifier.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.getDictionaryInfo',
             'params': {'identifier': 'geonlp:abcdef'},
             'id': 'test_getDictionaryInfo_nocandidate',
-        })
+        }
         expected = None
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
     def test_addressGeocoding(self, client):
         """
         Test ``geonlp.addressGeocoding`` API.
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.addressGeocoding',
             'params': {'address': '千代田区一ツ橋2-1-2'},
             'id': 'test_addressGeocoding',
-        })
+        }
         expected = {
             'candidates': [{
                 'fullname': ['東京都', '千代田区', '一ツ橋', '二丁目', '1番'],
@@ -378,7 +269,8 @@ class TestBasicApi:
                 'x': 139.758148, 'y': 35.692332}],
             'matched': '千代田区一ツ橋2-1-'
         }
-        validate_jsonrpc(client, query, expected)
+        result = validate_jsonrpc(client, query, expected)
+        write_resreq(query, result)
 
 
 class TestParseOptions:
@@ -398,14 +290,14 @@ class TestParseOptions:
         'geoshape-city' が利用できるため、
         「和歌山市（市）」に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': '和歌山市は晴れ。',
                 'options': {'set-dic': r'geoshape'}
             },
             'id': 'test_parse_set_dic',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -419,6 +311,41 @@ class TestParseOptions:
         assert prop['surface'] == '和歌山市'
         assert prop['geoword_properties']['geolod_id'] == 'lQccqK'
 
+        write_resreq(query, result)
+
+    def test_parse_option_set_dic_list(self, client):
+        """
+        Test 'set-dic' option with list of identifiers.
+
+        Notes
+        -----
+        'set-dic' に ['geoshape'] を指定すると、
+        identifier が 'geoshape' と文字列として等しい辞書だけが
+        利用されます。
+
+        一致する辞書は無いため、「和歌山」に解決されます。
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': '和歌山市は晴れ。',
+                'options': {'set-dic': ['geoshape']}
+            },
+            'id': 'test_parse_set_dic_list',
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 地名語のチェック
+        prop = features[0]['properties']
+        assert prop['surface'] == '和歌山'
+        assert 'geoword_properties' not in prop
+
     def test_parse_option_remove_dic(self, client):
         """
         Test 'remove-dic' option.
@@ -431,14 +358,14 @@ class TestParseOptions:
         'geoshape-city' が利用できるため、
         「和歌山市（市）」に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': '和歌山市は晴れ。',
                 'options': {'remove-dic': r'station'}
             },
             'id': 'test_parse_remove_dic',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -453,6 +380,8 @@ class TestParseOptions:
         assert prop['geoword_properties']['dictionary_identifier'] == \
             'geonlp:geoshape-city'
 
+        write_resreq(query, result)
+
     def test_parse_option_add_dic(self, client):
         """
         Test 'add-dic' option.
@@ -463,19 +392,19 @@ class TestParseOptions:
         'remove-dic' で除外指定されていても、
         identifier に 'city' を含む辞書は利用されます。
 
-        'geoshape-city' は除外対象ですが add-dic で
-        指定されているため利用可能になり、
-        「千代田区（区）」に解決されます。
+        'geoshape-city' は 'remove-dic' で除外されますが
+        'add-dic' で追加されるため利用可能になり、
+        「和歌山市（市）」に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
-                'sentence': '千代田区は雨。',
-                'options': {'remove-dic': r'geoshape',
+                'sentence': '和歌山市は晴れ。',
+                'options': {'remove-dic': r'.*',
                             'add-dic': r'city'}
             },
-            'id': 'test_parse_remove_dic',
-        })
+            'id': 'test_parse_add_dic',
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -486,9 +415,11 @@ class TestParseOptions:
 
         # 地名語のチェック
         prop = features[0]['properties']
-        assert prop['surface'] == '千代田区'
+        assert prop['surface'] == '和歌山市'
         assert prop['geoword_properties']['dictionary_identifier'] == \
             'geonlp:geoshape-city'
+
+        write_resreq(query, result)
 
     def test_parse_option_set_class(self, client):
         """
@@ -503,14 +434,14 @@ class TestParseOptions:
         「和歌山市（駅）」は鉄道施設なので除外され、
         「和歌山市（市）」に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': '和歌山市は晴れ。',
                 'options': {'set-class': [r'.*', r'-鉄道施設/.*']}
             },
             'id': 'test_parse_set_class',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -525,9 +456,132 @@ class TestParseOptions:
         assert prop['geoword_properties']['dictionary_identifier'] == \
             'geonlp:geoshape-city'
 
+        write_resreq(query, result)
+
+    def test_parse_option_set_class_except(self, client):
+        """
+        Test 'set-class' option.
+
+        Notes
+        -----
+        'set-class' に [r'.*', r'-鉄道施設/.*', r'鉄道施設/鉄道駅'] を
+        指定すると、この順番に評価するため「鉄道駅」は利用されます。
+
+        「和歌山市（駅）」は鉄道施設/鉄道駅なので対象になります。
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': '和歌山市は晴れ。',
+                'options': {'set-class': [
+                    r'.*', r'-鉄道施設/.*', r'.*駅$'
+                ]}
+            },
+            'id': 'test_parse_set_class_except',
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 地名語のチェック
+        prop = features[0]['properties']
+        assert prop['surface'] == '和歌山市'
+        assert prop['geoword_properties']['dictionary_identifier'] == \
+            'geonlp:ksj-station-N02-2019'
+
+    def test_parse_option_add_class(self, client):
+        """
+        Test 'add-class' option.
+
+        Notes
+        -----
+        'add-class' で利用するクラスのリストを指定できます。
+
+        'add-class' に [r'-.*', '市区町村'] を指定すると、
+        全ての固有名クラスを対象クラスから除外し、
+        次に「市区町村」クラスの地名語を対象に加えます。
+
+        「和歌山市（駅）」は鉄道施設なので除外され、
+        「和歌山市（市）」に解決されます。
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': '和歌山市は晴れ。',
+                'options': {'add-class': [
+                    r'-.*', '市区町村'
+                ]}
+            },
+            'id': 'test_parse_add_class',
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 地名語のチェック
+        prop = features[0]['properties']
+        assert prop['surface'] == '和歌山市'
+        assert prop['geoword_properties']['dictionary_identifier'] == \
+            'geonlp:geoshape-city'
+
+        write_resreq(query, result)
+
+    def test_parse_option_remove_class(self, client):
+        """
+        Test 'remove-class' option.
+
+        Notes
+        -----
+        'set-class' で一度に指定する代わりに、
+        'remove-class' で除外するクラスのリストを指定できます。
+
+        'remove-class' に [r'.*', '-市区町村'] を指定すると、
+        全ての固有名クラスを対象クラスから除外し、
+        次に「市区町村」クラスの地名語を対象に加えます。
+
+        'remove-class' のリストではクラス名の先頭に '-' を付けると
+        追加の意味になります。
+
+        「和歌山市（駅）」は鉄道施設なので除外され、
+        「和歌山市（市）」に解決されます。
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': '和歌山市は晴れ。',
+                'options': {'remove-class': [
+                    r'.*', '-市区町村'
+                ]}
+            },
+            'id': 'test_parse_remove_class',
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 地名語のチェック
+        prop = features[0]['properties']
+        assert prop['surface'] == '和歌山市'
+        assert prop['geoword_properties']['dictionary_identifier'] == \
+            'geonlp:geoshape-city'
+
+        write_resreq(query, result)
+
     def test_parse_option_add_remove_class(self, client):
         """
-        Test 'add-class' and 'remove-class' options.
+        Test 'add-class' + 'remove-class' options.
 
         Notes
         -----
@@ -535,25 +589,25 @@ class TestParseOptions:
         'add-class' で利用するクラスのリストを、
         'remove-class' で除外するクラスのリストを指定できます。
 
-        'add-class' で [r'.*'] を、
-        'remove-class' で [r'鉄道施設/.*'] を指定すると、
-        全ての固有名クラスから '鉄道施設/.*' を除いたものを持つ
-        地名語を候補として利用します。
+        ただし必ず 'remove-class' が先に評価されます。
 
-        'remove-class' のリストではクラス名の先頭に '-' は不要です。
+        'add-class' で ['市区町村'] を、
+        'remove-class' で [r'.*'] を指定すると、
+        全ての固有名クラスを対象クラスから除外し、
+        次に「市区町村」クラスの地名語を対象に加えます。
 
         「和歌山市（駅）」は鉄道施設なので除外され、
         「和歌山市（市）」に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': '和歌山市は晴れ。',
-                'options': {'add-class': [r'.*'],
-                            'remove-class': [r'鉄道施設/.*']}
+                'options': {'add-class': ['市区町村'],
+                            'remove-class': [r'.*']}
             },
             'id': 'test_parse_add_remove_class',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -569,14 +623,12 @@ class TestParseOptions:
             'geonlp:geoshape-city'
 
 
-@pytest.mark.skipif(gdal_not_installed,
-                    reason="GDALがインストールされていません")
 class TestSpatialFilters:
     """
     SpatialFilter のテスト
     """
 
-    def test_parse_filter_geo_contains(self, client):
+    def test_parse_filter_geo_contains(self, client, require_gdal):
         """
         Test 'geo-contains' filter.
 
@@ -588,7 +640,7 @@ class TestSpatialFilters:
         東京都付近の四角形を空間範囲として指定することで
         東京都の府中駅に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': '府中に行きます。',
@@ -602,7 +654,7 @@ class TestSpatialFilters:
                     }}
             },
             'id': 'test_parse_geo_contains',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -616,7 +668,9 @@ class TestSpatialFilters:
         assert prop['surface'] == '府中'
         assert '京王線' in prop['geoword_properties']['hypernym']
 
-    def test_parse_filter_geo_disjoint(self, client):
+        write_resreq(query, result)
+
+    def test_parse_filter_geo_disjoint(self, client, require_gdal):
         """
         Test 'geo-disjoint' filter.
 
@@ -628,7 +682,7 @@ class TestSpatialFilters:
         東京都付近の四角形を空間範囲として指定することで
         京都市の府中駅に解決されます。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': '府中に行きます。',
@@ -637,7 +691,7 @@ class TestSpatialFilters:
                 }
             },
             'id': 'test_parse_geo_disjoint',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -650,6 +704,8 @@ class TestSpatialFilters:
         prop = features[0]['properties']
         assert prop['surface'] == '府中'
         assert '天橋立鋼索鉄道' in prop['geoword_properties']['hypernym']
+
+        write_resreq(query, result)
 
 
 class TestTemporalFilters:
@@ -672,7 +728,7 @@ class TestTemporalFilters:
         西東京市は指定した期間内に設置されたので
         田無市と保谷市、西東京市は全て地名語になります。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': self.sentence,
@@ -681,7 +737,91 @@ class TestTemporalFilters:
                 }
             },
             'id': 'test_time_exists',
-        })
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 地名語のチェック
+        for feature in features:
+            prop = feature['properties']
+            if prop['surface'] in ('田無市', '保谷市', '西東京市',):
+                assert prop['node_type'] == 'GEOWORD'
+            else:
+                assert prop['node_type'] == 'NORMAL'
+
+        write_resreq(query, result)
+
+    def test_time_exists_single_value(self, client):
+        """
+        Test 'time-exists' filter with single value.
+
+        Notes
+        -----
+        'time-exists' に日時または日時を1つ指定すると、
+        その時点に存在した地名語だけが候補になります。
+
+        西東京市は指定した時点にはまだ設置されていないので
+        田無市と保谷市が地名語、西東京市は固有名詞になります。
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': self.sentence,
+                'options': {
+                    'time-exists': '2000-01-01'
+                }
+            },
+            'id': 'test_time_exists',
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 地名語のチェック
+        for feature in features:
+            prop = feature['properties']
+            if prop['surface'] in ('田無市', '保谷市',):
+                assert prop['node_type'] == 'GEOWORD'
+            elif prop['surface'] in ('西東京市',):
+                assert prop['node_type'] == 'NORMAL'
+            else:
+                assert prop['node_type'] == 'NORMAL'
+
+    def test_time_exists_dict(self, client):
+        """
+        Test 'time-exists' filter with dict values.
+
+        Notes
+        -----
+        'time-exists' に 'date_from' と 'date_to' を持つ
+        dict を指定すると、
+        その期間に存在した地名語だけが候補になります。
+
+        西東京市は指定した期間内に設置されたので
+        田無市と保谷市、西東京市は全て地名語になります。
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': self.sentence,
+                'options': {
+                    'time-exists': {
+                        'date_from': '2000-01-01',
+                        'date_to': '2001-02-01'
+                    }
+                }
+            },
+            'id': 'test_time_exists_dict',
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -711,7 +851,7 @@ class TestTemporalFilters:
         西東京市は指定した期間の開始時より後に設置されたので
         田無市と保谷市が地名語、西東京市は固有名詞になります。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': self.sentence,
@@ -720,7 +860,7 @@ class TestTemporalFilters:
                 }
             },
             'id': 'test_time_before',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -739,6 +879,8 @@ class TestTemporalFilters:
             else:
                 assert prop['node_type'] == 'NORMAL'
 
+        write_resreq(query, result)
+
     def test_time_after(self, client):
         """
         Test 'time-after' filter.
@@ -752,7 +894,7 @@ class TestTemporalFilters:
         田無市と保谷市は指定した期間の終了時より前に廃止されたので
         田無市と保谷市は固有名詞、西東京市は地名語になります。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': self.sentence,
@@ -761,7 +903,7 @@ class TestTemporalFilters:
                 }
             },
             'id': 'test_time_after',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -780,6 +922,8 @@ class TestTemporalFilters:
             else:
                 assert prop['node_type'] == 'NORMAL'
 
+        write_resreq(query, result)
+
     def test_time_overlaps(self, client):
         """
         Test 'time-overlaps' filter.
@@ -793,7 +937,7 @@ class TestTemporalFilters:
         西東京市は指定した期間内に設置されたので
         田無市と保谷市、西東京市は全て地名語になります。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': self.sentence,
@@ -801,8 +945,8 @@ class TestTemporalFilters:
                     'time-overlaps': ['2000-01-01', '2001-02-01']
                 }
             },
-            'id': 'test_time_after',
-        })
+            'id': 'test_time_overlaps',
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -819,6 +963,8 @@ class TestTemporalFilters:
             else:
                 assert prop['node_type'] == 'NORMAL'
 
+        write_resreq(query, result)
+
     def test_time_covers(self, client):
         """
         Test 'time-covers' filter.
@@ -833,7 +979,7 @@ class TestTemporalFilters:
         田無市と保谷市は期間内に廃止されたので、
         田無市、保谷市、西東京市は全て固有名詞になります。
         """
-        query = json.dumps({
+        query = {
             'method': 'geonlp.parse',
             'params': {
                 'sentence': self.sentence,
@@ -842,7 +988,7 @@ class TestTemporalFilters:
                 }
             },
             'id': 'test_time_covers',
-        })
+        }
         expected = '*'
         result = validate_jsonrpc(client, query, expected)
 
@@ -855,3 +1001,5 @@ class TestTemporalFilters:
         for feature in features:
             prop = feature['properties']
             assert prop['node_type'] == 'NORMAL'
+
+        write_resreq(query, result)

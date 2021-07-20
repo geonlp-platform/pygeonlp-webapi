@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "020a18e4d24729a884f469e8cee97eb8307e910fe51d1bbe6c2786fc3ffdc3c6"
+            "sha256": "d17ae1795e8c254f28f313f764bbdb7faf5628137e12e72a2f9d8d875a8636e4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -212,6 +212,10 @@
         "pygeonlp": {
             "editable": true,
             "path": "./../pygeonlp_pub"
+        },
+        "pygeonlp-webapi": {
+            "editable": true,
+            "path": "."
         },
         "python-dateutil": {
             "hashes": [
