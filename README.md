@@ -26,6 +26,11 @@ Then, post a JSON-RPC message to the server.
 $ curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "geonlp.parse", "params":{"sentence":"NIIは千代田区にあります。"}, "id":"1"}' http://localhost:5000/api
 ```
 
+More detailed Japanese documentation of the software including API is
+available under <a href="doc/">`/doc`</a> directory.
+You can also find the latest online documentation at
+[Web Service section in GeoNLP Documentation](http://geonlp.ex.nii.ac.jp/doc/pygeonlp/webapi_doc/index.html).
+
 ## Pre-requirements
 
 `pygeonlp-webapi` requires [pygeonlp](https://github.com/geonlp-platform/pygeonlp) and 

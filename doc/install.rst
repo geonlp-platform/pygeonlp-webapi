@@ -22,15 +22,63 @@ libboost を事前に適切に設定しておかないと
 pygeonlp-webapi をインストールしてください。
 
 
+.. _setup_pygeonlp_webapi:
+
 インストール後の作業
 --------------------
 
-pygeonlp-webapi は利用するデータベースのディレクトリを
-``pygeonlp.api.get_db_dir()`` を呼びだして決定します。
+**データベースの作成**
 
-pygeonlp-webapi にはデータベースを作成する機能は
+pygeonlp-webapi には検索対象となる地名語のデータベースを作成する機能は
 ありませんので、 pygeonlp でデータベースを作成してください。
-データベースの作成方法は `インストール後の設定作業 <https://geonlp.ex.nii.ac.jp/doc/pygeonlp/install.html#setup-pygeonlp>`_ を参照してください。
+データベースの作成方法は
+`インストール後の設定作業 <https://geonlp.ex.nii.ac.jp/doc/pygeonlp/install.html#setup-pygeonlp>`_
+を参照してください。
+
+**サーバ設定**
+
+以下の設定値を変更することができます。
+
+- 地名語データベースのディレクトリ
+
+  pygeonlp が利用するデータベースのディレクトリを指定します。
+
+  - 環境変数 ``GEONLP_DB_DIR`` を設定すると、そのディレクトリにある
+    地名語データベースを利用します
+
+  - ``GEONLP_DB_DIR`` が設定されておらず、 ``HOME`` が設定されていると、
+    ``$HOME/geonlp/db/`` にある地名語データベースを利用します
+
+  - 環境変数を利用せずに直接設定したい場合は
+    ``pygeonlp_webapi/config/default.py`` の
+    ``GEONLP_DIR =`` にディレクトリのパスを書いてください
+
+- 住所ジオコーダの辞書ディレクトリ
+
+  jageocoder が利用する住所辞書のディレクトリを指定します。
+
+  - 環境変数 ``JAGEOCODER_DB_DIR`` を設定すると、そのディレクトリにある
+    住所辞書を利用します
+
+  - ``JAGEOCODER_DB_DIR`` が設定されておらず、 ``HOME`` が設定
+    されていると、 ``$HOME/jageocoder/db/`` にある住所辞書を利用します
+
+  - 環境変数を利用せずに直接設定したい場合は
+    ``pygeonlp_webapi/config/default.py`` の
+    ``JAGEOCODER_DIR =`` にディレクトリのパスを書いてください
+
+- MeCab システム辞書ディレクトリ
+
+  形態素解析器 MeCab が利用する辞書ディレクトリを指定します。
+  デフォルト値はインストールした方法によって異なりますが、
+  コマンドラインで ``mecab-config --dicdir`` を実行して確認できます。
+
+  - 環境変数 ``MECAB_DIC_DIR`` を設定すると、そのディレクトリにある
+    システム辞書を利用します（NEologd を使いたい場合など）
+
+  - 環境変数を利用せずに直接設定したい場合は
+    ``pygeonlp_webapi/config/default.py`` の
+    ``MECAB_DIC_DIR =`` にディレクトリのパスを書いてください
 
 
 サーバの起動
