@@ -15,4 +15,6 @@ __pycache__/
 /build/
 /json/*.json
 
+/.env
+
 !.gitkeep

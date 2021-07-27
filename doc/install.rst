@@ -60,8 +60,9 @@ pygeonlp-webapi には検索対象となる地名語のデータベースを作�
   - 環境変数 ``JAGEOCODER_DB_DIR`` を設定すると、そのディレクトリにある
     住所辞書を利用します
 
-  - ``JAGEOCODER_DB_DIR`` が設定されておらず、 ``HOME`` が設定
-    されていると、 ``$HOME/jageocoder/db/`` にある住所辞書を利用します
+  - ``JAGEOCODER_DB_DIR`` が設定されていない場合、 jageocoder の
+    デフォルト値である ``{sys.prefix}/jageocoder/db/`` または
+    ``{site.USER_DATA}/jageocoder/db/`` から住所辞書を探します
 
   - 環境変数を利用せずに直接設定したい場合は
     ``pygeonlp_webapi/config/default.py`` の

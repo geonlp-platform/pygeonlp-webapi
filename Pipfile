@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-jageocoder = "*"
 pytest = "*"
 gdal = "==2.4.2"
+jageocoder = "*"
 
 [packages]
 pygeonlp = {path = "./../pygeonlp_pub", editable = true}

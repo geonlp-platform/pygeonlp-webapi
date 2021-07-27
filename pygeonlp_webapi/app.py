@@ -18,19 +18,17 @@ app = Flask('pygeonlp_webapi')
 app.config.from_object(config)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
-try:
+if config.JAGEOCODER_DIR:
     import jageocoder
-    dsn = 'sqlite:///{}'.format(os.path.join(
-        config.JAGEOCODER_DIR, 'address.db'))
-    jageocoder.init(dsn=dsn, trie_path=os.path.join(
-        config.JAGEOCODER_DIR, 'address.trie'))
-except OperationalError:
-    app.logger.warning('jageocoder 辞書がディレクトリ {} に見つかりません'.format(
-        config.JAGEOCODER_DIR))
-    jageocoder = None
-except ModuleNotFoundError:
-    app.logger.info('jageocoder がインストールされていません')
-    jageocoder = None
+    try:
+        jageocoder.init(db_dir=config.JAGEOCODER_DIR, mode='r')
+    except OperationalError:
+        app.logger.warning('jageocoder 辞書がディレクトリ {} に見つかりません'.format(
+            config.JAGEOCODER_DIR))
+        jageocoder = None
+    except ModuleNotFoundError:
+        app.logger.info('jageocoder がインストールされていません')
+        jageocoder = None
 
 
 geonlp_api.init(db_dir=config.GEONLP_DIR,

@@ -17,7 +17,7 @@ def createTempDatabase(tmp_path_factory):
     テスト用に一時的な GeoNLP データベースを作成します。
     テストを実行する際に一度だけ実行されます。
     """
-    if False:
+    if True:
         # Setup test database in a temporary directory
         db_dir = str(tmp_path_factory.mktemp('db'))
         geonlp_api.setup_basic_database(db_dir=db_dir)
