@@ -112,10 +112,10 @@ pygeonlp-webapi には検索対象となる地名語のデータベースを作�
 
   $ export GEONLP_DB_DIR=/usr/local/share/geonlp/db/
 
-**NEologを利用する場合**
+**NEologdを利用する場合**
 
 MeCab システム辞書として
-`NEolog <https://github.com/neologd/mecab-ipadic-neologd/>`_
+`NEologd <https://github.com/neologd/mecab-ipadic-neologd/>`_
 などデフォルトの IPADIC 以外の辞書を利用する場合、
 サーバを起動する前に環境変数 ``MECAB_DIC_DIR`` に
 辞書ディレクトリのパスをセットしてください。 ::

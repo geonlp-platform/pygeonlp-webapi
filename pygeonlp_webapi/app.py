@@ -10,6 +10,7 @@ from flask_jsonrpc import JSONRPC
 from flask_jsonrpc.exceptions import MethodNotFoundError
 from sqlite3 import OperationalError
 
+import jageocoder
 import pygeonlp.api as geonlp_api
 from pygeonlp_webapi.config.default import config
 
@@ -19,17 +20,8 @@ app.config.from_object(config)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
 if config.JAGEOCODER_DIR:
-    import jageocoder
-    try:
-        jageocoder.init(db_dir=config.JAGEOCODER_DIR, mode='r')
-    except OperationalError:
-        app.logger.warning('jageocoder 辞書がディレクトリ {} に見つかりません'.format(
-            config.JAGEOCODER_DIR))
-        jageocoder = None
-    except ModuleNotFoundError:
-        app.logger.info('jageocoder がインストールされていません')
-        jageocoder = None
-
+    jageocoder.init(db_dir=config.JAGEOCODER_DIR,
+                    mode='r')
 
 geonlp_api.init(db_dir=config.GEONLP_DIR,
                 **(config.GEONLP_API_OPTIONS))
@@ -299,12 +291,12 @@ def parse(sentence: str, options: Optional[dict] = {}) -> dict:
     apply_geonlp_api_parse_options(options)
     filters = get_filters_from_options(options)
     if options.get('geocoding'):
-        geocoder = jageocoder
+        geocoder = True
     else:
         geocoder = None
 
     result = geonlp_api.geoparse(
-        sentence, jageocoder=geocoder, filters=filters)
+        sentence, jageocoder=True, filters=filters)
 
     feature_collection = {
         "type": "FeatureCollection",
@@ -349,7 +341,7 @@ def parse_structured(
     apply_geonlp_api_parse_options(options)
     filters = get_filters_from_options(options)
     if options.get('geocoding'):
-        geocoder = jageocoder
+        geocoder = True
     else:
         geocoder = None
 
@@ -476,7 +468,7 @@ def address_geocoding(address: str) -> dict:
     dict
         住所ジオコーディングの結果
     """
-    if jageocoder is None:
+    if jageocoder.get_db_dir(mode='r') is None:
         raise MethodNotFoundError(
             message="'addressGeocoding' is not available on this server.")
 

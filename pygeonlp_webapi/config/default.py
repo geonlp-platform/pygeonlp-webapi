@@ -1,6 +1,7 @@
 import logging
 import os
 
+import jageocoder
 import pygeonlp.api as geonlp_api
 
 
@@ -9,7 +10,7 @@ class BaseConfig(object):
     TESTING = False
 
     GEONLP_DIR = geonlp_api.get_db_dir()
-    JAGEOCODER_DIR = geonlp_api.get_jageocoder_db_dir()
+    JAGEOCODER_DIR = jageocoder.get_db_dir()
     MECAB_DIC_DIR = os.environ.get('MECAB_DIC_DIR')
     GEONLP_API_OPTIONS = {}
 
