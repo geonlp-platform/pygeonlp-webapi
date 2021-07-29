@@ -3,7 +3,7 @@
   "params": {
     "sentence": "NIIは千代田区一ツ橋2-1-2にあります。",
     "options": {
-      "geocoding": "true"
+      "geocoding": true
     }
   },
   "id": "test_parse_geocoding"

@@ -57,7 +57,7 @@ class TestBasicApi:
             'method': 'geonlp.parse',
             'params': {
                 'sentence': 'NIIは千代田区一ツ橋2-1-2にあります。',
-                'options': {'geocoding': 'true'}
+                'options': {'geocoding': True}
             },
             'id': 'test_parse_geocoding',
         }
@@ -81,6 +81,39 @@ class TestBasicApi:
                 assert prop['node_type'] == 'NORMAL'
 
         write_resreq(query, result)
+
+    def test_parse_without_geocoding(self, client):
+        """
+        Test ``geonlp.parse`` API using geocoding.
+        """
+        query = {
+            'method': 'geonlp.parse',
+            'params': {
+                'sentence': 'NIIは千代田区一ツ橋2-1-2にあります。',
+                'options': {'geocoding': False}
+            },
+            'id': 'test_parse_without_geocoding',
+        }
+        expected = '*'
+        result = validate_jsonrpc(client, query, expected)
+
+        # GeoJSON Feature Collection のチェック
+        assert result['type'] == 'FeatureCollection'
+        assert 'features' in result
+        features = result['features']
+
+        # 形態素解析のチェック
+        words = 'NII/は/千代田区/一ツ橋/2/-/1/-/2/に/あり/ます/。'.split('/')
+        for pos, feature in enumerate(features):
+            prop = feature['properties']
+            assert prop['surface'] == words[pos]  # 表記が一致
+
+            if prop['surface'] == '千代田区':
+                assert prop['node_type'] == 'GEOWORD'
+            elif prop['surface'] == '一ツ橋':
+                assert prop['node_type'] == 'NORMAL'
+            else:
+                assert prop['node_type'] == 'NORMAL'
 
     def test_parseStructured(self, client):
         """

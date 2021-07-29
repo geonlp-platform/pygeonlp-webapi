@@ -290,13 +290,13 @@ def parse(sentence: str, options: Optional[dict] = {}) -> dict:
     """
     apply_geonlp_api_parse_options(options)
     filters = get_filters_from_options(options)
-    if options.get('geocoding'):
+    if options.get('geocoding') in (True, 'true', 'True',):
         geocoder = True
     else:
         geocoder = None
 
     result = geonlp_api.geoparse(
-        sentence, jageocoder=True, filters=filters)
+        sentence, jageocoder=geocoder, filters=filters)
 
     feature_collection = {
         "type": "FeatureCollection",

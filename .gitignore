@@ -13,6 +13,7 @@ __pycache__/
 
 /base_data/
 /build/
+/dist/
 /json/*.json
 
 /.env
