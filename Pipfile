@@ -1,0 +1,24 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+gdal = "==2.4.2"
+jageocoder = "*"
+
+[packages]
+pygeonlp = {path = "./../pygeonlp_pub", editable = true}
+flask-jsonrpc = "*"
+pygeonlp-webapi = {path = ".", editable = true}
+
+[requires]
+python_version = "3.6"
+
+[scripts]
+devserver = "python -m pygeonlp_webapi.app"
+server = "gunicorn pygeonlp_webapi.app:app --workers=1 --bind=0.0.0.0:8000"
+pytest = "pytest --pdb"
+format = "autopep8 -ivr --ignore E226,E24,W50,W690,E501 ."
+lint = "flake8 --show-source --extend-ignore E501 ."
