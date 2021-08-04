@@ -1,14 +1,11 @@
 from collections.abc import Iterable
 import datetime
 from logging.config import dictConfig
-from numbers import Real
-import os
-from typing import Any, Dict, List, Union, NoReturn, Optional
+from typing import List, Union, Optional
 
 from flask import Flask
 from flask_jsonrpc import JSONRPC
-from flask_jsonrpc.exceptions import MethodNotFoundError
-from sqlite3 import OperationalError
+from flask_jsonrpc.exceptions import MethodNotFoundError, InvalidParamsError
 
 import jageocoder
 import pygeonlp.api as geonlp_api
@@ -269,6 +266,16 @@ def get_filters_from_options(options: Optional[dict] = {}):
     return filters
 
 
+def check_jageocoder_enabled():
+    """
+    Jageocoder が利用できるかどうか確認します。
+    利用できない場合は InvalidParamsError (-32602) を送ります。
+    """
+    if not config.JAGEOCODER_DIR:
+        raise InvalidParamsError(
+            message="'geocoding' option is not available on this server.")
+
+
 @jsonrpc.method('geonlp.parse')
 def parse(sentence: str, options: Optional[dict] = {}) -> dict:
     """
@@ -295,6 +302,9 @@ def parse(sentence: str, options: Optional[dict] = {}) -> dict:
     else:
         geocoder = None
 
+    if geocoder:
+        check_jageocoder_enabled()
+
     result = geonlp_api.geoparse(
         sentence, jageocoder=geocoder, filters=filters)
 
@@ -320,7 +330,7 @@ def parse_structured(
     地名解決の精度が低下する原因になります。
 
     テキストの意味的な区切り（文、段落など）が
-    分かっている場合は、1ブロックずつ ``parse()`` 
+    分かっている場合は、1ブロックずつ ``parse()``
     で処理するか、 ``parseStructured()`` を
     使ってください。
 
@@ -340,10 +350,13 @@ def parse_structured(
     """
     apply_geonlp_api_parse_options(options)
     filters = get_filters_from_options(options)
-    if options.get('geocoding'):
+    if options.get('geocoding') in (True, 'true', 'True',):
         geocoder = True
     else:
         geocoder = None
+
+    if geocoder:
+        check_jageocoder_enabled()
 
     result = []
     for sentence in sentence_list:
@@ -468,7 +481,7 @@ def address_geocoding(address: str) -> dict:
     dict
         住所ジオコーディングの結果
     """
-    if jageocoder.get_db_dir(mode='r') is None:
+    if not config.JAGEOCODER_DIR:
         raise MethodNotFoundError(
             message="'addressGeocoding' is not available on this server.")
 
