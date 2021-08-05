@@ -1,9 +1,3 @@
-import glob
-import json
-import os
-import urllib.parse
-import sys
-
 import pytest
 
 import pygeonlp.api as geonlp_api
@@ -50,5 +44,6 @@ def client():
 def require_gdal():
     try:
         import gdal
+        return gdal.VersionInfo()
     except ModuleNotFoundError:
         pytest.skip("Skip (GDAL not installed)")

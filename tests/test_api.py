@@ -1,5 +1,3 @@
-import pytest
-
 from tests.helpers import validate_jsonrpc, write_resreq
 
 """
