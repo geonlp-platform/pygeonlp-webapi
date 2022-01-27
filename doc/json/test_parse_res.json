@@ -52,9 +52,9 @@
         "geoword_properties": {
           "body": "神保町",
           "dictionary_id": 3,
-          "dictionary_identifier": "geonlp:ksj-station-N02-2019",
-          "entry_id": "2891e10e9314a0b378fac6aace6d2a7f",
-          "geolod_id": "82wiE0",
+          "dictionary_identifier": "geonlp:ksj-station-N02",
+          "entry_id": "5WS6qh",
+          "geolod_id": "uN6ecI",
           "hypernym": [
             "東京都",
             "10号線新宿線"
@@ -77,7 +77,7 @@
           "prononciation": "",
           "subclass1": "固有名詞",
           "subclass2": "地名語",
-          "subclass3": "82wiE0:神保町駅",
+          "subclass3": "uN6ecI:神保町駅",
           "surface": "神保町駅",
           "yomi": ""
         },

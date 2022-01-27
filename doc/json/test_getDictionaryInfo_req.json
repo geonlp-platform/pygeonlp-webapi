@@ -1,7 +1,7 @@
 {
   "method": "geonlp.getDictionaryInfo",
   "params": {
-    "identifier": "geonlp:ksj-station-N02-2019"
+    "identifier": "geonlp:ksj-station-N02"
   },
   "id": "test_getDictionaryInfo"
 }

@@ -58,6 +58,9 @@ def validate_jsonrpc(client, query, expected):
     response_object = call_jsonrpc(client, query)
     result = response_object['result']
     if expected != '*':
+        if result != expected:
+            print("result: '{}'".format(result), file=sys.stderr)
+
         assert result == expected
 
     return result

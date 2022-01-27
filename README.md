@@ -55,8 +55,7 @@ Execute the command to register the basic place name word analysis dictionaries
 (`*.json`, `*.csv`) in this package into the database under the default diretory.
 
 ```
->>> import pygeonlp.api as api
->>> api.setup_basic_database()
+$ python -m pygeonlp.api setup
 ```
 
 ### Run tests (Optional)

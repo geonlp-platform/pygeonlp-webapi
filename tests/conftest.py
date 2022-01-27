@@ -1,6 +1,7 @@
 import pytest
 
 import pygeonlp.api as geonlp_api
+from pygeonlp.api.dict_manager import DictManager
 from pygeonlp_webapi.app import app
 from pygeonlp_webapi.config.default import config
 
@@ -14,7 +15,8 @@ def createTempDatabase(tmp_path_factory):
     if True:
         # Setup test database in a temporary directory
         db_dir = str(tmp_path_factory.mktemp('db'))
-        geonlp_api.setup_basic_database(db_dir=db_dir)
+        manager = DictManager(db_dir=db_dir)
+        manager.setupBasicDatabase()
         geonlp_api.init(db_dir=db_dir,
                         **(config.GEONLP_API_OPTIONS))
     else:

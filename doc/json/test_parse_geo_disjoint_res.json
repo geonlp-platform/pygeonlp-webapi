@@ -12,9 +12,9 @@
         "geoword_properties": {
           "body": "府中",
           "dictionary_id": 3,
-          "dictionary_identifier": "geonlp:ksj-station-N02-2019",
-          "entry_id": "ecabefc60f23d0442029793c6eab81d0",
-          "geolod_id": "Auq8Kv",
+          "dictionary_identifier": "geonlp:ksj-station-N02",
+          "entry_id": "MREv4E",
+          "geolod_id": "We02Nd",
           "hypernym": [
             "丹後海陸交通",
             "天橋立鋼索鉄道"
@@ -37,7 +37,7 @@
           "prononciation": "",
           "subclass1": "固有名詞",
           "subclass2": "地名語",
-          "subclass3": "Auq8Kv:府中駅",
+          "subclass3": "We02Nd:府中駅",
           "surface": "府中",
           "yomi": ""
         },

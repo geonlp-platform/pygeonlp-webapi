@@ -12,9 +12,9 @@
         "geoword_properties": {
           "body": "府中",
           "dictionary_id": 3,
-          "dictionary_identifier": "geonlp:ksj-station-N02-2019",
-          "entry_id": "d7596c3444b3632f5236ae9e3168bab9",
-          "geolod_id": "JQSUIi",
+          "dictionary_identifier": "geonlp:ksj-station-N02",
+          "entry_id": "KajwsU",
+          "geolod_id": "8NE02H",
           "hypernym": [
             "京王電鉄",
             "京王線"
@@ -37,7 +37,7 @@
           "prononciation": "",
           "subclass1": "固有名詞",
           "subclass2": "地名語",
-          "subclass3": "JQSUIi:府中駅",
+          "subclass3": "8NE02H:府中駅",
           "surface": "府中",
           "yomi": ""
         },
