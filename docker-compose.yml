@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  geonlpapi:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ./pygeonlp_webapi:/api
+    restart: always
+    ports:
+      - 5000:5000
