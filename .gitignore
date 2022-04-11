@@ -15,6 +15,7 @@ __pycache__/
 /build/
 /dist/
 /json/*.json
+/jageocoder/
 
 /.env
 
