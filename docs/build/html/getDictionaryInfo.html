@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>geonlp.getDictionaryInfo &#8212; pygeonlp-webapi  ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="geonlp.addressGeocoding" href="addressGeocoding.html" />
+    <link rel="prev" title="geonlp.getDictionaries" href="getDictionaries.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="addressGeocoding.html" title="geonlp.addressGeocoding"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="getDictionaries.html" title="geonlp.getDictionaries"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geonlp.getDictionaryInfo</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="geonlp-getdictionaryinfo">
+<span id="pygeonlp-webapi-getdictionaryinfo"></span><h1>geonlp.getDictionaryInfo<a class="headerlink" href="#geonlp-getdictionaryinfo" title="この見出しへのパーマリンク">¶</a></h1>
+<p>指定された identifer を持つ地名解析辞書の JSONLD
+メタデータをデータベースから取得します。</p>
+<p>結果は JSONLD 文字列です。
+JSONLD をデコードした JSON オブジェクトではない点に
+注意してください。</p>
+<p><strong>リクエストパラメータ</strong></p>
+<dl class="simple">
+<dt><em>identifier</em><span class="classifier">str</span></dt><dd><ul class="simple">
+<li><p>地名解析辞書の identifier</p></li>
+</ul>
+</dd>
+<dt><em>options</em><span class="classifier">dict, optional</span></dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="index.html#pygeonlp-webapi-parse-option"><span class="std std-ref">Parse オプション</span></a> を参照</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>レスポンス</strong></p>
+<p>辞書の jsonld メタデータ文字列を返します。
+identifier と一致する辞書が存在しない場合には
+null を返します。</p>
+<section id="id1">
+<h2>リクエストの例<a class="headerlink" href="#id1" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp.getDictionaryInfo&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;params&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:ksj-station-N02&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;test_getDictionaryInfo&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>レスポンスの例<a class="headerlink" href="#id2" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;{\&quot;@context\&quot;: \&quot;https://schema.org/\&quot;, \&quot;@type\&quot;: \&quot;Dataset\&quot;, \&quot;alternateName\&quot;: \&quot;\&quot;, \&quot;creator\&quot;: [{\&quot;@type\&quot;: \&quot;Organization\&quot;, \&quot;name\&quot;: \&quot;株式会社情報試作室\&quot;, \&quot;sameAs\&quot;: \&quot;https://www.info-proto.com/\&quot;}], \&quot;dateModified\&quot;: \&quot;2021-08-27T17:18:18+09:00\&quot;, \&quot;description\&quot;: \&quot;国土数値情報「鉄道データ（N02）」から作成した、日本の鉄道駅（地下鉄を含む）の辞書です。hypernym には運営者名と路線名を記載しています。「都営」ではなく「東京都」のようになっていますので注意してください。自由フィールドとして、railway_classに「鉄道区分」、institution_typeに「事業者種別」を含みます。\&quot;, \&quot;distribution\&quot;: [{\&quot;@type\&quot;: \&quot;DataDownload\&quot;, \&quot;contentUrl\&quot;: \&quot;https://www.info-proto.com/static/ksj-station-N02.csv\&quot;, \&quot;encodingFormat\&quot;: \&quot;text/csv\&quot;}], \&quot;identifier\&quot;: [\&quot;geonlp:ksj-station-N02\&quot;], \&quot;isBasedOn\&quot;: {\&quot;@type\&quot;: \&quot;CreativeWork\&quot;, \&quot;name\&quot;: \&quot;国土数値情報 鉄道データ\&quot;, \&quot;url\&quot;: \&quot;https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v2_2.html\&quot;}, \&quot;keywords\&quot;: [\&quot;GeoNLP\&quot;, \&quot;地名辞書\&quot;], \&quot;license\&quot;: \&quot;https://creativecommons.org/licenses/by/4.0/\&quot;, \&quot;name\&quot;: \&quot;国土数値情報 鉄道データ（駅）\&quot;, \&quot;size\&quot;: \&quot;10191\&quot;, \&quot;spatialCoverage\&quot;: {\&quot;@type\&quot;: \&quot;Place\&quot;, \&quot;geo\&quot;: {\&quot;@type\&quot;: \&quot;GeoShape\&quot;, \&quot;box\&quot;: \&quot;26.193265 127.652285 45.41616333333333 145.59723\&quot;}}, \&quot;temporalCoverage\&quot;: \&quot;../..\&quot;, \&quot;url\&quot;: \&quot;https://www.info-proto.com/static/ksj-station-N02.html\&quot;}&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/geonlp_logo.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="index.html">目次</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">geonlp.getDictionaryInfo</a><ul>
+<li><a class="reference internal" href="#id1">リクエストの例</a></li>
+<li><a class="reference internal" href="#id2">レスポンスの例</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>前のトピックへ</h4>
+    <p class="topless"><a href="getDictionaries.html"
+                          title="前の章へ">geonlp.getDictionaries</a></p>
+  </div>
+  <div>
+    <h4>次のトピックへ</h4>
+    <p class="topless"><a href="addressGeocoding.html"
+                          title="次の章へ">geonlp.addressGeocoding</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/getDictionaryInfo.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="addressGeocoding.html" title="geonlp.addressGeocoding"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="getDictionaries.html" title="geonlp.getDictionaries"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geonlp.getDictionaryInfo</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, GeoNLP Project.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

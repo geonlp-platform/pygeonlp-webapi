@@ -3,7 +3,7 @@ import datetime
 from logging.config import dictConfig
 from typing import List, Union, Optional
 
-from flask import Flask
+from flask import Flask, redirect
 from flask_jsonrpc import JSONRPC
 from flask_jsonrpc.exceptions import MethodNotFoundError, InvalidParamsError
 
@@ -17,8 +17,7 @@ app.config.from_object(config)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
 if config.JAGEOCODER_DIR:
-    jageocoder.init(db_dir=config.JAGEOCODER_DIR,
-                    mode='r')
+    jageocoder.init(db_dir=config.JAGEOCODER_DIR, mode='r')
 
 
 def apply_geonlp_api_parse_options(options: Optional[dict] = None):
@@ -494,6 +493,11 @@ def address_geocoding(address: str) -> dict:
             message="'addressGeocoding' is not available on this server.")
 
     return jageocoder.search(address)
+
+
+@app.route('/')
+def index():
+    return redirect('/api/browse')
 
 
 if __name__ == '__main__':

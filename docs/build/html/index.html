@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>ウェブサービス機能 &#8212; pygeonlp-webapi  ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="インストール手順" href="install.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="install.html" title="インストール手順"
+             accesskey="N">次へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ウェブサービス機能</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="pygeonlp-webapi">
+<span id="id1"></span><h1>ウェブサービス機能<a class="headerlink" href="#pygeonlp-webapi" title="この見出しへのパーマリンク">¶</a></h1>
+<p>JavaScript などで構築されたウェブアプリケーションや、
+Python 以外の言語で開発したアプリケーションから、
+地名語辞書を検索したりテキストのジオパージング処理を行ないたい場合、
+pygeonlp の解析・検索機能を利用したウェブサービスとして
+提供する拡張モジュール
+<a class="reference external" href="https://github.com/geonlp-platform/pygeonlp-webapi">pygeonlp-webapi</a>
+を利用できます。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">インストール手順</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#setup-pygeonlp-webapi">インストール後の作業</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#id5">アンインストール</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run_server.html">サーバ実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="run_server.html#id2">テストサーバ起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_server.html#id3">動作テスト</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_server.html#id4">プロダクションサーバ起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_server.html#id5">サーバ設定</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run_docker.html">Docker で実行</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="run_docker.html#id1">イメージの作成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_docker.html#id2">サーバコンテナを起動</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_docker.html#id3">サーバコンテナを終了</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_docker.html#id4">コンテナとイメージを削除</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="webapi">
+<h2>WebAPI の使い方<a class="headerlink" href="#webapi" title="この見出しへのパーマリンク">¶</a></h2>
+<p>pygeonlp-webapi は <a class="reference external" href="http://json-rpc.org/">JSON-RPC 2.0</a>
+を利用します。</p>
+<p>サービスのエンドポイント <code class="docutils literal notranslate"><span class="pre">/api</span></code> に JSON
+リクエストメッセージを POST し、
+JSON レスポンスを受け取ります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -X POST -H &quot;Content-Type: application/json&quot; -d &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;, &quot;method&quot;: &quot;geonlp.parse&quot;, &quot;params&quot;: {&quot;sentence&quot;: &quot;NIIは神保町駅から徒歩7分です。&quot;}, &quot;id&quot;: &quot;test_parse&quot;}&#39; http://localhost:5000/api
+</pre></div>
+</div>
+<p>WebAPI およびオプションは状態を保持しません。
+つまり、直前にどのようなリクエストを実行したかに関わらず、
+同じリクエストを送れば同じレスポンスが返ります。</p>
+<p>ただしサーバ側のバージョンやデータベースが変更された場合は、
+結果が変わることがあります。</p>
+</section>
+<section id="pygeonlp-webapi-methods">
+<span id="id3"></span><h2>WebAPI 一覧<a class="headerlink" href="#pygeonlp-webapi-methods" title="この見出しへのパーマリンク">¶</a></h2>
+<p>WebAPI メソッドの一覧です。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="webapi_parse.html">geonlp.parse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webapi_parseStructured.html">geonlp.parseStructured</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webapi_search.html">geonlp.search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webapi_getGeoInfo.html">geonlp.getGeoInfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webapi_getDictionaries.html">geonlp.getDictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webapi_getDictionaryInfo.html">geonlp.getDictionaryInfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webapi_addressGeocoding.html">geonlp.addressGeocoding</a></li>
+</ul>
+</div>
+</section>
+<section id="parse">
+<span id="pygeonlp-webapi-parse-option"></span><h2>Parse オプション<a class="headerlink" href="#parse" title="この見出しへのパーマリンク">¶</a></h2>
+<p>WebAPI で利用する地名語の地名解析辞書や固有名クラスを
+指定したり、結果に対して適用するフィルタを指定できます。</p>
+<p>Parse オプションの一覧です。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="option_geocoding.html">geocoding オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_set_dic.html">set-dic オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_remove_dic.html">remove-dic オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_add_dic.html">add-dic オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_set_class.html">set-class オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_remove_class.html">remove-class オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_add_class.html">add-class オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_geo_contains.html">geo-contains オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_geo_disjoint.html">geo-disjoint オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_time_exists.html">time-exists オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_time_before.html">time-before オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_time_after.html">time-after オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_time_overlaps.html">time-overlaps オプション</a></li>
+<li class="toctree-l1"><a class="reference internal" href="option_time_covers.html">time-covers オプション</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/geonlp_logo.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="#">目次</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">ウェブサービス機能</a><ul>
+<li><a class="reference internal" href="#webapi">WebAPI の使い方</a></li>
+<li><a class="reference internal" href="#pygeonlp-webapi-methods">WebAPI 一覧</a></li>
+<li><a class="reference internal" href="#parse">Parse オプション</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>次のトピックへ</h4>
+    <p class="topless"><a href="install.html"
+                          title="次の章へ">インストール手順</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="install.html" title="インストール手順"
+             >次へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">ウェブサービス機能</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, GeoNLP Project.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

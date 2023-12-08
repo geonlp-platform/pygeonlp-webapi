@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>サーバ実行 &#8212; pygeonlp-webapi  ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="geonlp.parse" href="webapi_parse.html" />
+    <link rel="prev" title="インストール手順" href="install.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="webapi_parse.html" title="geonlp.parse"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="インストール手順"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">サーバ実行</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="run-server">
+<span id="id1"></span><h1>サーバ実行<a class="headerlink" href="#run-server" title="この見出しへのパーマリンク">¶</a></h1>
+<section id="id2">
+<h2>テストサーバ起動<a class="headerlink" href="#id2" title="この見出しへのパーマリンク">¶</a></h2>
+<p>テストサーバを起動するには次のコマンドを実行します。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m flask --app=pygeonlp_webapi.app run --port=5000
+</pre></div>
+</div>
+<p>他のマシンからアクセスする必要がある場合は <code class="docutils literal notranslate"><span class="pre">--host=0.0.0.0</span></code>
+も指定してください。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m flask --app=pygeonlp_webapi.app run --port=5000 --host=0.0.0.0
+</pre></div>
+</div>
+<p>テストサーバは <code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code> で終了します。</p>
+</section>
+<section id="id3">
+<h2>動作テスト<a class="headerlink" href="#id3" title="この見出しへのパーマリンク">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">flask-jsonrpc</span></code> の web browsable API 機能を利用して、
+ブラウザ上で API の確認とテストを行なうことができます。</p>
+<p>サービス起動後、<code class="docutils literal notranslate"><span class="pre">Web</span> <span class="pre">brosable</span> <span class="pre">API</span></code> の URL (
+デフォルトでは <a class="reference external" href="http://127.0.0.1:5000/api/browse/">http://127.0.0.1:5000/api/browse/</a> )
+を開き、動作確認したいメソッドを左メニューから選択します。</p>
+<p>パラメータを入力するダイアログが表示されますので、
+必要なパラメータを入力して <code class="docutils literal notranslate"><span class="pre">Save</span></code> ボタンを押すと
+処理結果が Response に表示されます。</p>
+</section>
+<section id="id4">
+<h2>プロダクションサーバ起動<a class="headerlink" href="#id4" title="この見出しへのパーマリンク">¶</a></h2>
+<p>Flask はデバッグ・テスト目的のサーバのため、実際に運用する際には
+Gunicorn など他の WSGI サーバを利用する必要があります。</p>
+<p>たとえば Gunicorn を利用する場合は次のように実行してください。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip3 install gunicorn
+$ gunicorn pygeonlp_webapi.app:app --bind=127.0.0.1:5000
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--bind</span></code> はこのサーバにアクセスできるホストとポートを指定します。
+どこからでもアクセスできるサービスをポート 8000 で公開したい場合は
+<code class="docutils literal notranslate"><span class="pre">--bind=0.0.0.0:8000</span></code> のように指定してください。</p>
+</section>
+<section id="id5">
+<h2>サーバ設定<a class="headerlink" href="#id5" title="この見出しへのパーマリンク">¶</a></h2>
+<p>pygeonlp の環境変数を利用して WebAPI サーバの設定を変更できます。</p>
+<p>詳細は pygeonlp リファレンスの
+<a class="reference external" href="https://pygeonlp.readthedocs.io/latest/envvars.html">環境変数</a>
+を参照してください。</p>
+<details class="summary-">
+<summary>データベースのパスを指定したい場合</summary><p>デフォルト以外のディレクトリにデータベースを作成した場合は
+サーバを起動する前に環境変数 <code class="docutils literal notranslate"><span class="pre">GEONLP_DB_DIR</span></code> に
+データベースを作成したディレクトリのパスをセットしてください。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export GEONLP_DB_DIR=/usr/local/share/geonlp/db/
+</pre></div>
+</div>
+</details><details class="summary-neologd">
+<summary>NEologdを利用したい場合</summary><p>MeCab システム辞書として
+<a class="reference external" href="https://github.com/neologd/mecab-ipadic-neologd/">NEologd</a>
+などデフォルトの IPADIC 以外の辞書を利用する場合、
+サーバを起動する前に環境変数 <code class="docutils literal notranslate"><span class="pre">GEONLP_MECAB_DIC_DIR</span></code> に
+辞書ディレクトリのパスをセットしてください。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export MECAB_DIC_DIR=$HOME/mecab-ipadic-neologd/
+</pre></div>
+</div>
+<p>詳細は pygeonlp リファレンスの
+<a class="reference external" href="https://pygeonlp.readthedocs.io/latest/link_neologd.html">NEologd連携</a>
+を参照してください。</p>
+</details><details class="summary-jageocoder">
+<summary>Jageocoderを利用したい場合</summary><p>住所辞書をインストールしたいディレクトリを
+環境変数 <code class="docutils literal notranslate"><span class="pre">JAGEOCODER_DB2_DIR</span></code> に設定して、
+Jageocoder の住所辞書をインストールしてからサーバを起動してください。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export JAGEOCODER_DB2_DIR=$HOME/jageocoder/db/
+</pre></div>
+</div>
+<p>詳細は pygeonlp リファレンスの
+<a class="reference external" href="https://pygeonlp.readthedocs.io/latest/link_jageocoder.html">住所ジオコーダー連携</a>
+を参照してください。</p>
+</details></section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/geonlp_logo.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="index.html">目次</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">サーバ実行</a><ul>
+<li><a class="reference internal" href="#id2">テストサーバ起動</a></li>
+<li><a class="reference internal" href="#id3">動作テスト</a></li>
+<li><a class="reference internal" href="#id4">プロダクションサーバ起動</a></li>
+<li><a class="reference internal" href="#id5">サーバ設定</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>前のトピックへ</h4>
+    <p class="topless"><a href="install.html"
+                          title="前の章へ">インストール手順</a></p>
+  </div>
+  <div>
+    <h4>次のトピックへ</h4>
+    <p class="topless"><a href="webapi_parse.html"
+                          title="次の章へ">geonlp.parse</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/run_server.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="webapi_parse.html" title="geonlp.parse"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="インストール手順"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">サーバ実行</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, GeoNLP Project.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

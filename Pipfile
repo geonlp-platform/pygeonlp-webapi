@@ -5,17 +5,23 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
-gdal = "==2.4.2"
 autopep8 = "*"
 flake8 = "*"
+twine = "*"
+sphinx = ">=5.3.0, <6.0.0"
+sphinx-rtd-theme = ">=1.1.1"
+sphinx-toolbox = "*"
+
 
 [packages]
+pipenv = ">=2022.1.8"
+setuptools = ">=65.5.1"
 flask-jsonrpc = "*"
 pygeonlp = ">=1.2"
 pygeonlp-webapi = {path = ".", editable = true}
 
 [scripts]
-devserver = "python -m pygeonlp_webapi.app"
+devserver = "python -m flask --app=pygeonlp_webapi.app run --host=0.0.0.0 --port=5000"
 server = "gunicorn pygeonlp_webapi.app:app --workers=1 --bind=0.0.0.0:8000"
 pytest = "pytest --pdb"
 format = "autopep8 -ivr --ignore E226,E24,W50,W690,E501 ."

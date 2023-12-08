@@ -45,7 +45,7 @@ def client():
 @pytest.fixture(scope="session")
 def require_gdal():
     try:
-        import gdal
+        from osgeo import gdal
         return gdal.VersionInfo()
     except ModuleNotFoundError:
         pytest.skip("Skip (GDAL not installed)")
