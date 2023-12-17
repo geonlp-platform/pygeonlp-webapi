@@ -1,5 +1,9 @@
 # pygeonlp-webapi, A json-rpc webapi server for pygeonlp
 
+This feature has been integrated into
+[pygeonlp](https://github.com/geonlp-platform/pygeonlp) v.1.2.2.
+It will no longer be maintained. 
+
 `pygeonlp-webapi` is a WSGI module to use pygeonlp features as a JSON-RPC web service.
 
 ## How To Use
