@@ -1,0 +1,762 @@
+
+<!DOCTYPE html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>geonlp.parseStructured &#8212; pygeonlp-webapi  ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="geonlp.search" href="search.html" />
+    <link rel="prev" title="geonlp.parse" href="parse.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="search.html" title="geonlp.search"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="parse.html" title="geonlp.parse"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geonlp.parseStructured</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="geonlp-parsestructured">
+<span id="pygeonlp-webapi-parsestructured"></span><h1>geonlp.parseStructured<a class="headerlink" href="#geonlp-parsestructured" title="この見出しへのパーマリンク">¶</a></h1>
+<p>複数のセンテンスを geoparse します。</p>
+<p>このメソッドは、リストのそれぞれのテキストを geoparse してから
+結果を結合します。</p>
+<p>先にテキストを結合して <code class="docutils literal notranslate"><span class="pre">parse()</span></code> を呼んだ場合と比較すると、
+長すぎるテキストの分割を自動で行なうか、呼びだす側で
+指定するかの違いがあります。</p>
+<p>自動的に分割すると、意味的に連続したパラグラフの途中で
+切れてしまうことがあり、地名解決の精度が低下します。
+そのためテキストの意味的な区切り（文、段落など）が
+分かっている場合は、1ブロックずつ <code class="docutils literal notranslate"><span class="pre">parse()</span></code> で処理するか、
+<code class="docutils literal notranslate"><span class="pre">parseStructured()</span></code> を利用してください。</p>
+<p><strong>リクエストパラメータ</strong></p>
+<dl class="simple">
+<dt><em>sentence_list</em><span class="classifier">list of str</span></dt><dd><ul class="simple">
+<li><p>変換したいテキストのリスト</p></li>
+<li><p>長さの上限なし、件数の上限なし</p></li>
+</ul>
+</dd>
+<dt><em>options</em><span class="classifier">dict, optional</span></dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="index.html#pygeonlp-webapi-parse-option"><span class="std std-ref">Parse オプション</span></a> を参照</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>レスポンス</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">features</span></code> に GeoJSON Feature 形式の地名語、
+非地名語、住所をリストとして含む
+FeatureCollection 形式の GeoJSON を返します。</p>
+<section id="id1">
+<h2>リクエストの例<a class="headerlink" href="#id1" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp.parseStructured&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;params&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;sentence_list&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;NIIは神保町駅から徒歩7分です。&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;千代田区一ツ橋2-1-2にあります。&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;竹橋駅も近いです。&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;test_parseStructured&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>レスポンスの例<a class="headerlink" href="#id2" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;features&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;固有名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;組織&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NII&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NII&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;は&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ワ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;係助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;は&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ハ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;は&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;coordinates&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">139.757845</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">35.6960275</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Point&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;geoword_properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;神保町&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:ksj-station-N02&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;entry_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;5WS6qh&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;geolod_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;uN6ecI&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;hypernym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;東京都&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;10号線新宿線&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;institution_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;公営鉄道&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;35.6960275&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;139.757845&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ne_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;鉄道施設/鉄道駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;railway_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;普通鉄道&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;suffix&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;駅&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;神保町駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;固有名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;地名語&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;uN6ecI:神保町駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;神保町駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GEOWORD&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;神保町駅&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;から&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;カラ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;格助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;から&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;カラ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;から&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;徒歩&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;トホ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;徒歩&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;トホ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;徒歩&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;数&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;7&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;7&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;分&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;フン&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;接尾&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助数詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;分&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;フン&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;分&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;特殊・デス&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;基本形&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;です&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助動詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;デス&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;です&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;デス&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;です&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;記号&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;句点&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;coordinates&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">139.753634</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">35.694003</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Point&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;geoword_properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;address&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;東京都千代田区&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;千代田&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;body_variants&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;千代田&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;code&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">          </span><span class="s2">&quot;countyname&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;countyname_variants&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:geoshape-city&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;entry_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;13101A1968&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;geolod_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;WWIY7G&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;hypernym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;東京都&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;35.69400300&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;139.75363400&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ne_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;市区町村&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prefname&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;東京都&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prefname_variants&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;東京都&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;source&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1/千代田区役所/千代田区九段南1-2-1/P34-14_13.xml&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;suffix&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;区&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;valid_from&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;valid_to&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;千代田区&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;固有名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;地名語&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;WWIY7G:千代田区&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;千代田区&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GEOWORD&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;千代田区&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一ツ橋&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ヒトツバシ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;固有名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;地域&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一ツ橋&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ヒトツバシ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一ツ橋&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;数&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;記号&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;-&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;数&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;記号&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;-&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;数&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;に&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ニ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;格助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;に&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ニ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;に&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;五段・ラ行&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;連用形&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ある&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;動詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;アリ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;自立&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;あり&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;アリ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;あり&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;特殊・マス&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;基本形&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ます&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助動詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;マス&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ます&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;マス&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ます&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;記号&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;句点&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;coordinates&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">139.75767000000002</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">35.69044</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Point&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;geoword_properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;竹橋&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:ksj-station-N02&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;entry_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;976eu3&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;geolod_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;3QKgos&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;hypernym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;東京地下鉄&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;5号線東西線&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;institution_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;民営鉄道&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;35.69044&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;139.75767000000002&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ne_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;鉄道施設/鉄道駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;railway_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;普通鉄道&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;suffix&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;駅&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;竹橋駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;固有名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;地名語&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;3QKgos:竹橋駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;竹橋駅&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GEOWORD&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;竹橋駅&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;も&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;モ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;係助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;も&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;モ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;も&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;形容詞・アウオ段&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;基本形&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;近い&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;形容詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;チカイ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;自立&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;近い&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;チカイ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;近い&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;特殊・デス&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;基本形&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;です&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助動詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;デス&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;です&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;デス&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;です&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;記号&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;句点&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;FeatureCollection&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/geonlp_logo.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="index.html">目次</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">geonlp.parseStructured</a><ul>
+<li><a class="reference internal" href="#id1">リクエストの例</a></li>
+<li><a class="reference internal" href="#id2">レスポンスの例</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>前のトピックへ</h4>
+    <p class="topless"><a href="parse.html"
+                          title="前の章へ">geonlp.parse</a></p>
+  </div>
+  <div>
+    <h4>次のトピックへ</h4>
+    <p class="topless"><a href="search.html"
+                          title="次の章へ">geonlp.search</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/parseStructured.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="search.html" title="geonlp.search"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="parse.html" title="geonlp.parse"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geonlp.parseStructured</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, GeoNLP Project.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

@@ -58,6 +58,9 @@ def validate_jsonrpc(client, query, expected):
     response_object = call_jsonrpc(client, query)
     result = response_object['result']
     if expected != '*':
+        if result != expected:
+            print("result: '{}'".format(result), file=sys.stderr)
+
         assert result == expected
 
     return result
@@ -91,8 +94,8 @@ def write_resreq(request, response):
     Notes
     -----
     The request JSON will be written to
-    'doc/json/{request['id']}_req.json', and
-    the response to 'doc/json/{request['id']}_res.json'.
+    'docs/source/json/{request['id']}_req.json', and
+    the response to 'docs/source/json/{request['id']}_res.json'.
 
     Parameters
     ----------
@@ -102,7 +105,7 @@ def write_resreq(request, response):
         The response in decoded JSON format.
     """
     basename = request['id']
-    with open("doc/json/{}_req.json".format(basename), "w") as f:
+    with open("docs/source/json/{}_req.json".format(basename), "w") as f:
         json.dump(request, f, indent=2, ensure_ascii=False)
-    with open("doc/json/{}_res.json".format(basename), "w") as f:
+    with open("docs/source/json/{}_res.json".format(basename), "w") as f:
         json.dump(response, f, indent=2, ensure_ascii=False)

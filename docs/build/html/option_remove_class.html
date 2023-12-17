@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>remove-class オプション &#8212; pygeonlp-webapi  ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="add-class オプション" href="option_add_class.html" />
+    <link rel="prev" title="set-class オプション" href="option_set_class.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="option_add_class.html" title="add-class オプション"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="option_set_class.html" title="set-class オプション"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">remove-class オプション</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="remove-class">
+<span id="pygeonlp-webapi-option-remove-class"></span><h1>remove-class オプション<a class="headerlink" href="#remove-class" title="この見出しへのパーマリンク">¶</a></h1>
+<p>解析対象とする固有名クラスを除外します。</p>
+<p>固有名クラスは正規表現文字列のリストで指定してください。
+また、クラス名の先頭に <code class="docutils literal notranslate"><span class="pre">-</span></code> を指定すると、そのクラスは
+除外ではなく追加されます。</p>
+<p><a class="reference internal" href="option_set_class.html#pygeonlp-webapi-option-set-class"><span class="std std-ref">set-class オプション</span></a>,
+<a class="reference internal" href="#pygeonlp-webapi-option-remove-class"><span class="std std-ref">remove-class オプション</span></a>,
+<a class="reference internal" href="option_add_class.html#pygeonlp-webapi-option-add-class"><span class="std std-ref">add-class オプション</span></a>
+が同時に指定されている場合、
+まず <code class="docutils literal notranslate"><span class="pre">set-class</span></code>, 次に <code class="docutils literal notranslate"><span class="pre">remove-class</span></code>, 最後に
+<code class="docutils literal notranslate"><span class="pre">add-class</span></code> が評価されます。</p>
+<p><code class="docutils literal notranslate"><span class="pre">set-class</span></code> が指定されていない場合は <code class="docutils literal notranslate"><span class="pre">[r'.*']</span></code>
+から除外します。</p>
+<p>クラス名の評価は指定された順番に行なわれます。
+つまり「鉄道施設は除く、ただし鉄道駅は利用する」という場合は
+<code class="docutils literal notranslate"><span class="pre">[r'鉄道施設/.*',</span> <span class="pre">r'-.*駅$']</span></code> のように指定します。</p>
+<p><strong>パラメータ</strong></p>
+<p><em>add-class</em> : list of str</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>正規表現として解釈し、<em>パターンに一致する</em>
+固有名クラスを持つ地名語を解析対象に追加します</p></li>
+</ul>
+</div></blockquote>
+<section id="id1">
+<h2>リクエストの例<a class="headerlink" href="#id1" title="この見出しへのパーマリンク">¶</a></h2>
+<p>まず全ての固有名クラスを検索対象から除外し、
+次に <code class="docutils literal notranslate"><span class="pre">市区町村</span></code> に一致するものを検索対象に追加します。
+市区町村名しか検索されなくなります。</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp.parse&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;params&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;sentence&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山市は晴れ。&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;options&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;remove-class&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;.*&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;-市区町村&quot;</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;test_parse_remove_class&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>レスポンスの例<a class="headerlink" href="#id2" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;features&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;coordinates&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">135.170808</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">34.230514</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Point&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;geoword_properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;address&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山県和歌山市&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;body_variants&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;code&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">          </span><span class="s2">&quot;countyname&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;countyname_variants&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;dictionary_identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:geoshape-city&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;entry_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;30201A1968&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;geolod_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;lQccqK&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;hypernym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;和歌山県&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;34.23051400&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;135.17080800&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;ne_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;市区町村&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prefname&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山県&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prefname_variants&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山県&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;source&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1/和歌山市役所/和歌山市七番丁23/P34-14_30.xml&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;suffix&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;市&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="s2">&quot;valid_from&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;1889-04-01&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;valid_to&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山市&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;固有名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;地名語&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;lQccqK:和歌山市&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山市&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GEOWORD&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;和歌山市&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;は&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ワ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;係助詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;は&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ハ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;は&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;晴れ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;名詞&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ハレ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;一般&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;晴れ&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ハレ&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;晴れ&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;geometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;properties&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;morphemes&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;conjugated_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;conjugation_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;original_form&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;pos&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;記号&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;prononciation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass1&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;句点&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass2&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;subclass3&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;yomi&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;node_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;surface&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;。&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Feature&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;FeatureCollection&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/geonlp_logo.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="index.html">目次</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">remove-class オプション</a><ul>
+<li><a class="reference internal" href="#id1">リクエストの例</a></li>
+<li><a class="reference internal" href="#id2">レスポンスの例</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>前のトピックへ</h4>
+    <p class="topless"><a href="option_set_class.html"
+                          title="前の章へ">set-class オプション</a></p>
+  </div>
+  <div>
+    <h4>次のトピックへ</h4>
+    <p class="topless"><a href="option_add_class.html"
+                          title="次の章へ">add-class オプション</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/option_remove_class.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="option_add_class.html" title="add-class オプション"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="option_set_class.html" title="set-class オプション"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">remove-class オプション</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, GeoNLP Project.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

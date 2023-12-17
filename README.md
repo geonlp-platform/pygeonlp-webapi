@@ -1,5 +1,9 @@
 # pygeonlp-webapi, A json-rpc webapi server for pygeonlp
 
+This feature has been integrated into
+[pygeonlp](https://github.com/geonlp-platform/pygeonlp) v.1.2.2.
+It will no longer be maintained. 
+
 `pygeonlp-webapi` is a WSGI module to use pygeonlp features as a JSON-RPC web service.
 
 ## How To Use
@@ -55,8 +59,7 @@ Execute the command to register the basic place name word analysis dictionaries
 (`*.json`, `*.csv`) in this package into the database under the default diretory.
 
 ```
->>> import pygeonlp.api as api
->>> api.setup_basic_database()
+$ python -m pygeonlp.api setup
 ```
 
 ### Run tests (Optional)

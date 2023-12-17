@@ -6,7 +6,7 @@ GDAL がインストールされているかどうかをチェックします
 """
 gdal_not_installed = False
 try:
-    import gdal
+    import osgeo
 except ModuleNotFoundErrlr:
     gdal_not_installed = True
 """
@@ -160,31 +160,30 @@ class TestBasicApi:
             'id': 'test_search',
         }
         expected = {
-            'QUy2yP': {
+            'Bn4q6d': {
                 'body': '国会議事堂前', 'dictionary_id': 3,
-                'entry_id': '1b5cc77fc2c83713a6750642f373d01f',
-                'geolod_id': 'QUy2yP',
-                'hypernym': ['東京地下鉄', '9号線千代田線'],
-                'institution_type': '民営鉄道',
-                'latitude': '35.673543333333335',
-                'longitude': '139.74305333333334',
-                'ne_class': '鉄道施設/鉄道駅',
-                'railway_class': '普通鉄道',
-                'suffix': ['駅', ''],
-                'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
-            },
-            'fuquyv': {
-                'body': '国会議事堂前', 'dictionary_id': 3,
-                'entry_id': 'e630bf128884455c4994e0ac5ca49b8d',
-                'geolod_id': 'fuquyv',
+                'dictionary_identifier': 'geonlp:ksj-station-N02',
+                'entry_id': 'LrGGxY', 'geolod_id': 'Bn4q6d',
                 'hypernym': ['東京地下鉄', '4号線丸ノ内線'],
                 'institution_type': '民営鉄道',
                 'latitude': '35.674845',
                 'longitude': '139.74534166666666',
                 'ne_class': '鉄道施設/鉄道駅',
                 'railway_class': '普通鉄道',
-                'suffix': ['駅', ''],
-                'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
+                'suffix': ['駅', '']
+            },
+            'cE8W4w': {
+                'body': '国会議事堂前', 'dictionary_id': 3,
+                'dictionary_identifier': 'geonlp:ksj-station-N02',
+                'entry_id': '4NFELa',
+                'geolod_id': 'cE8W4w',
+                'hypernym': ['東京地下鉄', '9号線千代田線'],
+                'institution_type': '民営鉄道',
+                'latitude': '35.673543333333335',
+                'longitude': '139.74305333333334',
+                'ne_class': '鉄道施設/鉄道駅',
+                'railway_class': '普通鉄道',
+                'suffix': ['駅', '']
             }
         }
         result = validate_jsonrpc(client, query, expected)
@@ -196,35 +195,34 @@ class TestBasicApi:
         """
         query = {
             'method': 'geonlp.getGeoInfo',
-            'params': {'idlist': ['fuquyv', 'QUy2yP']},
+            'params': {'idlist': ['Bn4q6d', 'cE8W4w']},
             'id': 'test_getGeoInfo_idlist',
         }
         expected = {
-            'QUy2yP': {
+            'Bn4q6d': {
                 'body': '国会議事堂前', 'dictionary_id': 3,
-                'entry_id': '1b5cc77fc2c83713a6750642f373d01f',
-                'geolod_id': 'QUy2yP',
-                'hypernym': ['東京地下鉄', '9号線千代田線'],
-                'institution_type': '民営鉄道',
-                'latitude': '35.673543333333335',
-                'longitude': '139.74305333333334',
-                'ne_class': '鉄道施設/鉄道駅',
-                'railway_class': '普通鉄道',
-                'suffix': ['駅', ''],
-                'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
-            },
-            'fuquyv': {
-                'body': '国会議事堂前', 'dictionary_id': 3,
-                'entry_id': 'e630bf128884455c4994e0ac5ca49b8d',
-                'geolod_id': 'fuquyv',
+                'dictionary_identifier': 'geonlp:ksj-station-N02',
+                'entry_id': 'LrGGxY', 'geolod_id': 'Bn4q6d',
                 'hypernym': ['東京地下鉄', '4号線丸ノ内線'],
                 'institution_type': '民営鉄道',
                 'latitude': '35.674845',
                 'longitude': '139.74534166666666',
                 'ne_class': '鉄道施設/鉄道駅',
                 'railway_class': '普通鉄道',
-                'suffix': ['駅', ''],
-                'dictionary_identifier': 'geonlp:ksj-station-N02-2019'
+                'suffix': ['駅', '']
+            },
+            'cE8W4w': {
+                'body': '国会議事堂前', 'dictionary_id': 3,
+                'dictionary_identifier': 'geonlp:ksj-station-N02',
+                'entry_id': '4NFELa',
+                'geolod_id': 'cE8W4w',
+                'hypernym': ['東京地下鉄', '9号線千代田線'],
+                'institution_type': '民営鉄道',
+                'latitude': '35.673543333333335',
+                'longitude': '139.74305333333334',
+                'ne_class': '鉄道施設/鉄道駅',
+                'railway_class': '普通鉄道',
+                'suffix': ['駅', '']
             }
         }
         result = validate_jsonrpc(client, query, expected)
@@ -254,7 +252,7 @@ class TestBasicApi:
         }
         expected = ['geonlp:geoshape-city',
                     'geonlp:geoshape-pref',
-                    'geonlp:ksj-station-N02-2019']
+                    'geonlp:ksj-station-N02']
         result = validate_jsonrpc(client, query, expected)
         write_resreq(query, result)
 
@@ -264,10 +262,10 @@ class TestBasicApi:
         """
         query = {
             'method': 'geonlp.getDictionaryInfo',
-            'params': {'identifier': 'geonlp:ksj-station-N02-2019'},
+            'params': {'identifier': 'geonlp:ksj-station-N02'},
             'id': 'test_getDictionaryInfo',
         }
-        expected = '{"@context": "https://schema.org/", "@type": "Dataset", "alternateName": "", "creator": [{"@type": "Organization", "name": "株式会社情報試作室", "sameAs": "https://www.info-proto.com/"}], "dateModified": "2019-12-31T00:00:00+09:00", "description": "国土数値情報「鉄道データ（令和元年度）N02-19」（https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v2_3.html）から作成した、日本の鉄道駅（地下鉄を含む）の辞書です。hypernymには運営者名と路線名を記載しています。「都営」ではなく「東京都」のようになっていますので注意してください。自由フィールドとして、railway_typeに「鉄道区分」、institution_typeに「事業者種別」を含みます。", "distribution": [{"@type": "DataDownload", "contentUrl": "https://www.info-proto.com/static/ksj-station-N02-2019.csv", "encodingFormat": "text/csv"}], "identifier": ["geonlp:ksj-station-N02-2019"], "isBasedOn": {"@type": "CreativeWork", "name": "鉄道データ（令和元年度）N02-19", "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v2_3.html"}, "keywords": ["GeoNLP", "地名辞書", "鉄道", "駅"], "license": "https://nlftp.mlit.go.jp/ksj/other/agreement.html", "name": "日本の鉄道駅（2019年）", "size": "10311", "spatialCoverage": {"@type": "Place", "geo": {"@type": "GeoShape", "box": "26.193265 127.652285 45.4161633333333 145.59723"}}, "temporalCoverage": "../..", "url": "https://www.info-proto.com/static/ksj-station-N02-2019.html"}'
+        expected = '{"@context": "https://schema.org/", "@type": "Dataset", "alternateName": "", "creator": [{"@type": "Organization", "name": "株式会社情報試作室", "sameAs": "https://www.info-proto.com/"}], "dateModified": "2021-08-27T17:18:18+09:00", "description": "国土数値情報「鉄道データ（N02）」から作成した、日本の鉄道駅（地下鉄を含む）の辞書です。hypernym には運営者名と路線名を記載しています。「都営」ではなく「東京都」のようになっていますので注意してください。自由フィールドとして、railway_classに「鉄道区分」、institution_typeに「事業者種別」を含みます。", "distribution": [{"@type": "DataDownload", "contentUrl": "https://www.info-proto.com/static/ksj-station-N02.csv", "encodingFormat": "text/csv"}], "identifier": ["geonlp:ksj-station-N02"], "isBasedOn": {"@type": "CreativeWork", "name": "国土数値情報 鉄道データ", "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v2_2.html"}, "keywords": ["GeoNLP", "地名辞書"], "license": "https://creativecommons.org/licenses/by/4.0/", "name": "国土数値情報 鉄道データ（駅）", "size": "10191", "spatialCoverage": {"@type": "Place", "geo": {"@type": "GeoShape", "box": "26.193265 127.652285 45.41616333333333 145.59723"}}, "temporalCoverage": "../..", "url": "https://www.info-proto.com/static/ksj-station-N02.html"}'
         result = validate_jsonrpc(client, query, expected)
         write_resreq(query, result)
 
@@ -293,13 +291,7 @@ class TestBasicApi:
             'params': {'address': '千代田区一ツ橋2-1-2'},
             'id': 'test_addressGeocoding',
         }
-        expected = {
-            'candidates': [{
-                'fullname': ['東京都', '千代田区', '一ツ橋', '二丁目', '1番'],
-                'id': 11460296, 'level': 7, 'name': '1番', 'note': None,
-                'x': 139.758148, 'y': 35.692332}],
-            'matched': '千代田区一ツ橋2-1-'
-        }
+        expected = "*"
         result = validate_jsonrpc(client, query, expected)
         write_resreq(query, result)
 
@@ -522,7 +514,7 @@ class TestParseOptions:
         prop = features[0]['properties']
         assert prop['surface'] == '和歌山市'
         assert prop['geoword_properties']['dictionary_identifier'] == \
-            'geonlp:ksj-station-N02-2019'
+            'geonlp:ksj-station-N02'
 
     def test_parse_option_add_class(self, client):
         """

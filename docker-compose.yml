@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  pygeonlp-webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./pygeonlp_webapi:/api
+      - ./jageocoder:/jageocoder
+    environment:
+      JAGEOCODER_DB_DIR: /jageocoder
+    ports:
+      - 25000:5000

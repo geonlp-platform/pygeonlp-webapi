@@ -3,7 +3,7 @@ import datetime
 from logging.config import dictConfig
 from typing import List, Union, Optional
 
-from flask import Flask
+from flask import Flask, redirect
 from flask_jsonrpc import JSONRPC
 from flask_jsonrpc.exceptions import MethodNotFoundError, InvalidParamsError
 
@@ -17,11 +17,7 @@ app.config.from_object(config)
 jsonrpc = JSONRPC(app, '/api', enable_web_browsable_api=True)
 
 if config.JAGEOCODER_DIR:
-    jageocoder.init(db_dir=config.JAGEOCODER_DIR,
-                    mode='r')
-
-geonlp_api.init(db_dir=config.GEONLP_DIR,
-                **(config.GEONLP_API_OPTIONS))
+    jageocoder.init(db_dir=config.JAGEOCODER_DIR, mode='r')
 
 
 def apply_geonlp_api_parse_options(options: Optional[dict] = None):
@@ -95,6 +91,12 @@ def apply_geonlp_api_parse_options(options: Optional[dict] = None):
     """
     if options is None:
         options = {}
+
+    if geonlp_api.default_workflow() is None:
+        # 最初のメソッド呼び出しの前に明示的に pygeonlp.api.init() が
+        # 呼ばれていない場合、ここで初期化します。
+        geonlp_api.init(db_dir=config.GEONLP_DIR,
+                        **(config.GEONLP_API_OPTIONS))
 
     geonlp_api.setActiveDictionaries(pattern=r'.*')  # デフォルトに戻す
 
@@ -300,13 +302,15 @@ def parse(sentence: str, options: Optional[dict] = {}) -> dict:
     if options.get('geocoding') in (True, 'true', 'True',):
         geocoder = True
     else:
-        geocoder = None
+        geocoder = False
 
     if geocoder:
         check_jageocoder_enabled()
 
-    result = geonlp_api.geoparse(
-        sentence, jageocoder=geocoder, filters=filters)
+    workflow = geonlp_api.default_workflow()
+    workflow.parser.set_jageocoder(geocoder)
+    workflow.filters = filters
+    result = workflow.geoparse(sentence)
 
     feature_collection = {
         "type": "FeatureCollection",
@@ -353,15 +357,18 @@ def parse_structured(
     if options.get('geocoding') in (True, 'true', 'True',):
         geocoder = True
     else:
-        geocoder = None
+        geocoder = False
 
     if geocoder:
         check_jageocoder_enabled()
 
+    workflow = geonlp_api.default_workflow()
+    workflow.parser.set_jageocoder(geocoder)
+    workflow.filters = filters
+
     result = []
     for sentence in sentence_list:
-        result += geonlp_api.geoparse(
-            sentence, jageocoder=geocoder, filters=filters)
+        result += workflow.geoparse(sentence)
 
     feature_collection = {
         "type": "FeatureCollection",
@@ -486,6 +493,11 @@ def address_geocoding(address: str) -> dict:
             message="'addressGeocoding' is not available on this server.")
 
     return jageocoder.search(address)
+
+
+@app.route('/')
+def index():
+    return redirect('/api/browse')
 
 
 if __name__ == '__main__':

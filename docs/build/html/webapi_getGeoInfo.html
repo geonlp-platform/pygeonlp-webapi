@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>geonlp.getGeoInfo &#8212; pygeonlp-webapi  ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="geonlp.getDictionaries" href="webapi_getDictionaries.html" />
+    <link rel="prev" title="geonlp.search" href="webapi_search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             accesskey="I">索引</a></li>
+        <li class="right" >
+          <a href="webapi_getDictionaries.html" title="geonlp.getDictionaries"
+             accesskey="N">次へ</a> |</li>
+        <li class="right" >
+          <a href="webapi_search.html" title="geonlp.search"
+             accesskey="P">前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geonlp.getGeoInfo</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="geonlp-getgeoinfo">
+<span id="pygeonlp-webapi-getgeoinfo"></span><h1>geonlp.getGeoInfo<a class="headerlink" href="#geonlp-getgeoinfo" title="この見出しへのパーマリンク">¶</a></h1>
+<p>指定した geolod_id を持つ語の情報を返します。
+id がデータベースに存在しない場合は null を返します。</p>
+<p><strong>リクエストパラメータ</strong></p>
+<dl class="simple">
+<dt><em>key</em><span class="classifier">list of str</span></dt><dd><ul class="simple">
+<li><p>検索する語の geolod_id のリスト</p></li>
+</ul>
+</dd>
+<dt><em>options</em><span class="classifier">dict, optional</span></dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="index.html#pygeonlp-webapi-parse-option"><span class="std std-ref">Parse オプション</span></a> を参照</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>レスポンス</strong></p>
+<p>geolod_id をキー、地名語の情報を値に持つ JSON
+オブジェクトを返します。</p>
+<section id="id1">
+<h2>リクエストの例<a class="headerlink" href="#id1" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp.getGeoInfo&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;params&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;idlist&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;Bn4q6d&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;cE8W4w&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;test_getGeoInfo_idlist&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>レスポンスの例<a class="headerlink" href="#id2" title="この見出しへのパーマリンク">¶</a></h2>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;Bn4q6d&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;国会議事堂前&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;dictionary_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;dictionary_identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:ksj-station-N02&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;entry_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;LrGGxY&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;geolod_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Bn4q6d&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;hypernym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;東京地下鉄&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;4号線丸ノ内線&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="s2">&quot;institution_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;民営鉄道&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;35.674845&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;139.74534166666666&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ne_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;鉄道施設/鉄道駅&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;railway_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;普通鉄道&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;suffix&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;駅&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="s2">&quot;cE8W4w&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;body&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;国会議事堂前&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;dictionary_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;dictionary_identifier&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;geonlp:ksj-station-N02&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;entry_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;4NFELa&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;geolod_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;cE8W4w&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;hypernym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;東京地下鉄&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;9号線千代田線&quot;</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="s2">&quot;institution_type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;民営鉄道&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;35.673543333333335&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;139.74305333333334&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;ne_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;鉄道施設/鉄道駅&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;railway_class&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;普通鉄道&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;suffix&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;駅&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;&quot;</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/geonlp_logo.png" alt="Logo"/>
+            </a></p>
+  <div>
+    <h3><a href="index.html">目次</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">geonlp.getGeoInfo</a><ul>
+<li><a class="reference internal" href="#id1">リクエストの例</a></li>
+<li><a class="reference internal" href="#id2">レスポンスの例</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>前のトピックへ</h4>
+    <p class="topless"><a href="webapi_search.html"
+                          title="前の章へ">geonlp.search</a></p>
+  </div>
+  <div>
+    <h4>次のトピックへ</h4>
+    <p class="topless"><a href="webapi_getDictionaries.html"
+                          title="次の章へ">geonlp.getDictionaries</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>このページ</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/webapi_getGeoInfo.rst.txt"
+            rel="nofollow">ソースコードを表示</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="検索" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>ナビゲーション</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="総合索引"
+             >索引</a></li>
+        <li class="right" >
+          <a href="webapi_getDictionaries.html" title="geonlp.getDictionaries"
+             >次へ</a> |</li>
+        <li class="right" >
+          <a href="webapi_search.html" title="geonlp.search"
+             >前へ</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pygeonlp-webapi  ドキュメント</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">geonlp.getGeoInfo</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, GeoNLP Project.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
